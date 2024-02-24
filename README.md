@@ -40,6 +40,11 @@ import (
 ## Running Go Code
 In cmd directory:
 ```bash
+// Updates go.mod to include any new packages used or remove
+//    any packages removed.
+go mod tidy
+// Complies the code into an executable
 go build
+// Runs the code
 .\main.exe
 ```
