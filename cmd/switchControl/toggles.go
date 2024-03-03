@@ -1,9 +1,14 @@
+/*
+switchControl
+
+	This package is responsible for making an API call to HomeAssistant to
+	turn Kasa Smart Outlets on and off.
+*/
 package switchcontrol
 
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -12,16 +17,28 @@ import (
 	"github.com/joho/godotenv"
 )
 
+/*
+Defining base URL and enpoint paths
+*/
 const (
 	baseURL         = `https://home.johnstephani.com`
 	onEndpointPath  = `/api/services/switch/turn_on`
 	offEndpointPath = `/api/services/switch/turn_off`
 )
 
+/*
+Defining the APIRequest Struct
+*/
 type APIRequest struct {
 	EntityID string `json:"entity_id"`
 }
 
+/*
+ToggleOn
+
+	Takes a deviceID string as a parameter and makes an API request
+	to toggle the designated outlet on.
+*/
 func ToggleOn(deviceID string) {
 	err := godotenv.Load()
 	if err != nil {
@@ -51,14 +68,19 @@ func ToggleOn(deviceID string) {
 	}
 	defer resp.Body.Close()
 
-	body, err := io.ReadAll(resp.Body)
+	_, err = io.ReadAll(resp.Body)
 	if err != nil {
 		log.Fatalf("Error reading HTTP response body: %v", err)
 	}
 
-	fmt.Println(string(body))
 }
 
+/*
+ToggleOff
+
+	Takes a deviceID string as a parameter and makes an API request
+	to toggle the designated outlet off.
+*/
 func ToggleOff(deviceID string) {
 	err := godotenv.Load()
 	if err != nil {
@@ -92,4 +114,5 @@ func ToggleOff(deviceID string) {
 	if err != nil {
 		log.Fatalf("Error reading HTTP response body: %v", err)
 	}
+
 }
