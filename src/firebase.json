@@ -6,6 +6,7 @@
   "functions": [
     {
       "source": "functions",
+      "main": "main.py",
       "codebase": "default",
       "ignore": [
         "venv",
