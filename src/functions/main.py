@@ -38,13 +38,17 @@ def scheduleLightOn(event: firestore_fn.Event[firestore_fn.DocumentSnapshot | No
 
     if settings.onTime <= now and not settings.offTime <= now:
         logger.info("Time is before now.")
-        serviceData = {
+        lightA = {
             'entity_id': 'switch.switch_a'
+        }
+        lightB = {
+            'entity_id': 'switch.switch_b'
         }
         
         try:
             # Send HTTP POST request to Home Assistant API to turn on the light
-            response = requests.post(f"{apiURL}/api/services/switch/turn_on", headers=headers, json=serviceData)
+            response = requests.post(f"{apiURL}/api/services/switch/turn_on", headers=headers, json=lightA)
+            response = requests.post(f"{apiURL}/api/services/switch/turn_on", headers=headers, json=lightB)
             response.raise_for_status()  # Raise an exception for HTTP errors
             logger.info("Light on scheduled successfully.")
         except requests.RequestException as e:
@@ -53,13 +57,17 @@ def scheduleLightOn(event: firestore_fn.Event[firestore_fn.DocumentSnapshot | No
    
     if settings.offTime <= now:
         logger.info("Time is before now.")
-        serviceData = {
+        lightA = {
             'entity_id': 'switch.switch_a'
+        }
+        lightB = {
+            'entity_id': 'switch.switch_b'
         }
     
         try:
             # Send HTTP POST request to Home Assistant API to turn on the light
-            response = requests.post(f"{apiURL}/api/services/switch/turn_off", headers=headers, json=serviceData)
+            response = requests.post(f"{apiURL}/api/services/switch/turn_off", headers=headers, json=lightA)
+            response = requests.post(f"{apiURL}/api/services/switch/turn_off", headers=headers, json=lightB)
             response.raise_for_status()  # Raise an exception for HTTP errors
             logger.info("Light off scheduled successfully.")
         except requests.RequestException as e:
