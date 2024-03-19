@@ -1,4 +1,4 @@
-from firebase_functions import https_fn, firestore_fn
+from firebase_functions import https_fn, firestore_fn, scheduler_fn
 from firebase_admin import initialize_app, firestore
 # import dotenv
 import os
@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 
 @firestore_fn.on_document_updated(document="GrowDuino/settings")
-def scheduleLightOn(event: firestore_fn.Event[firestore_fn.DocumentSnapshot | None]) -> None:
+def changedSettings(event: firestore_fn.Event[firestore_fn.DocumentSnapshot | None]) -> None:
     if event is None:
         return
     db = firestore.client()
@@ -48,9 +48,9 @@ def scheduleLightOn(event: firestore_fn.Event[firestore_fn.DocumentSnapshot | No
         try:
             # Send HTTP POST request to Home Assistant API to turn on the light
             response = requests.post(f"{apiURL}/api/services/switch/turn_on", headers=headers, json=lightA)
+            response.raise_for_status()  # Raise an exception for HTTP errors
             response = requests.post(f"{apiURL}/api/services/switch/turn_on", headers=headers, json=lightB)
             response.raise_for_status()  # Raise an exception for HTTP errors
-            logger.info("Light on scheduled successfully.")
         except requests.RequestException as e:
             # Handle HTTP request errors
             print(f"Failed to schedule light on: {e}")
@@ -67,9 +67,9 @@ def scheduleLightOn(event: firestore_fn.Event[firestore_fn.DocumentSnapshot | No
         try:
             # Send HTTP POST request to Home Assistant API to turn on the light
             response = requests.post(f"{apiURL}/api/services/switch/turn_off", headers=headers, json=lightA)
+            response.raise_for_status()  # Raise an exception for HTTP errors
             response = requests.post(f"{apiURL}/api/services/switch/turn_off", headers=headers, json=lightB)
             response.raise_for_status()  # Raise an exception for HTTP errors
-            logger.info("Light off scheduled successfully.")
         except requests.RequestException as e:
             # Handle HTTP request errors
             print(f"Failed to schedule light off: {e}")
