@@ -5,6 +5,7 @@ import os
 import requests
 import logging
 from datetime import datetime
+from settings import Settings
 
 app = initialize_app()
 # dotenv.load_dotenv() 
@@ -13,7 +14,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-@firestore_fn.on_document_updated(document="settings/{setting}")
+@firestore_fn.on_document_updated(document="GrowDuino/settings")
 def scheduleLightOn(event: firestore_fn.Event[firestore_fn.DocumentSnapshot | None]) -> None:
     if event is None:
         return
@@ -29,54 +30,40 @@ def scheduleLightOn(event: firestore_fn.Event[firestore_fn.DocumentSnapshot | No
 
     logger.info("Beginning of function.")
     now = datetime.now().time()
+    settingsRef = db.collection('GrowDuino').document('settings')
+    settingsDict = settingsRef.get().to_dict()
+    settings = Settings(settingsDict['onTime'], settingsDict['offTime'])
+    logger.info(settings.onTime)
     
-    logger.info("event param " + event.params['setting'])
-    if event.params['setting'] == 'onTime':
-        time_ref = db.collection('settings').document('onTime')
-        time_dict = time_ref.get().to_dict()
-        time = time_dict['onTime']
-        logger.info(time)
-        on_time = datetime.strptime(time, '%H:%M:%S').time()
-        logger.info(on_time)
-        if on_time <= now:
-            logger.info("Time is before now.")
-            serviceData = {
-                'entity_id': 'switch.switch_a'
-            }
+
+    if settings.onTime <= now and not settings.offTime <= now:
+        logger.info("Time is before now.")
+        serviceData = {
+            'entity_id': 'switch.switch_a'
+        }
         
-            try:
-                # Send HTTP POST request to Home Assistant API to turn on the light
-                response = requests.post(f"{apiURL}/api/services/switch/turn_on", headers=headers, json=serviceData)
-                response.raise_for_status()  # Raise an exception for HTTP errors
-                logger.info("Light on scheduled successfully.")
-            except requests.RequestException as e:
-                # Handle HTTP request errors
-                print(f"Failed to schedule light on: {e}")
-    if event.params['setting'] == 'offTime':
-        time_ref = db.collection('settings').document('offTime')
-        time_dict = time_ref.get().to_dict()
-        time = time_dict['offTime']
-        logger.info(time)
-        off_time = datetime.strptime(time, '%H:%M:%S').time()
-        logger.info(off_time)
-        if off_time <= now:
-            logger.info("Time is before now.")
-            serviceData = {
-                'entity_id': 'switch.switch_a'
-            }
-        
-            try:
-                # Send HTTP POST request to Home Assistant API to turn on the light
-                response = requests.post(f"{apiURL}/api/services/switch/turn_off", headers=headers, json=serviceData)
-                response.raise_for_status()  # Raise an exception for HTTP errors
-                logger.info("Light off scheduled successfully.")
-            except requests.RequestException as e:
-                # Handle HTTP request errors
-                print(f"Failed to schedule light off: {e}")
-    # if on_time < 0 or on_time > 23:
-    #     return
+        try:
+            # Send HTTP POST request to Home Assistant API to turn on the light
+            response = requests.post(f"{apiURL}/api/services/switch/turn_on", headers=headers, json=serviceData)
+            response.raise_for_status()  # Raise an exception for HTTP errors
+            logger.info("Light on scheduled successfully.")
+        except requests.RequestException as e:
+            # Handle HTTP request errors
+            print(f"Failed to schedule light on: {e}")
+   
+    if settings.offTime <= now:
+        logger.info("Time is before now.")
+        serviceData = {
+            'entity_id': 'switch.switch_a'
+        }
     
-    # # onTime = datetime.strptime(on_time, '%H:%M:%S').time()
-    
-    
+        try:
+            # Send HTTP POST request to Home Assistant API to turn on the light
+            response = requests.post(f"{apiURL}/api/services/switch/turn_off", headers=headers, json=serviceData)
+            response.raise_for_status()  # Raise an exception for HTTP errors
+            logger.info("Light off scheduled successfully.")
+        except requests.RequestException as e:
+            # Handle HTTP request errors
+            print(f"Failed to schedule light off: {e}")
+
     logger.info("End of function.")
