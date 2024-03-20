@@ -19,8 +19,9 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-@firestore_fn.on_document_updated(document="GrowDuino/settings")
-def changedSettings(event: firestore_fn.Event[firestore_fn.DocumentSnapshot | None]) -> None:
+@firestore_fn.on_document_updated(document="GrowDuino/{document}")
+# @firestore_fn.on_document_updated(document="GrowDuino/data")
+def checkSettings(event: firestore_fn.Event[firestore_fn.DocumentSnapshot | None]) -> None:
     if event is None:
         return
     db = firestore.client()
@@ -80,4 +81,24 @@ def changedSettings(event: firestore_fn.Event[firestore_fn.DocumentSnapshot | No
             print(f"Failed to schedule light off: {e}")
 
     logger.info("End of function.")
+
+# @firestore_fn.on_document_updated(document="GrowDuino/settings")
+# def lightCheck(event: firestore_fn.Event[firestore_fn.DocumentSnapshot | None]) -> None:
+#     if event is None:
+#         return
+#     db = firestore.client()
+#     apiURL = 'https://home.johnstephani.com'
+#     homeAssistantToken = os.getenv('ASSISTANT_TOKEN')
+#     if not homeAssistantToken:
+#         return
+#     headers = {
+#         'Authorization': f'Bearer {homeAssistantToken}',
+#         'Content-Type': 'application/json'
+#     }
+
+#     logger.info("Beginning of function.")
+#     now = datetime.now().time()
+#     settingsRef = db.collection('GrowDuino').document('settings')
+#     settingsDict = settingsRef.get().to_dict()
+#     curSettings = Settings(settingsDict['onTime'], settingsDict['offTime'])
 
