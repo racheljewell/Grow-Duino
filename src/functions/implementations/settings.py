@@ -7,6 +7,7 @@ import logging
 from datetime import datetime
 
 
+
 class Settings:
     def __init__(self, onTime, offTime):
         self.onTime =datetime.strptime(onTime, '%H:%M:%S').time()
