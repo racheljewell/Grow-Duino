@@ -60,7 +60,7 @@ def plot_sensor_data(packets):
     plt.title('Temperature Data over Time')
     plt.legend()
     plt.grid(True)
-    plt.show()
+    plt.show()  
 
 
 class DataPacket:
