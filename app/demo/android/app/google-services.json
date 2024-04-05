@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "824733657707",
+    "project_id": "grow-duino",
+    "storage_bucket": "grow-duino.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:824733657707:android:8abe724885c83b0f57df2e",
+        "android_client_info": {
+          "package_name": "com.google.firebase.presents.demo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiMiI3R9QkOtEkn4oka52pRu6P3J3NCqA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
