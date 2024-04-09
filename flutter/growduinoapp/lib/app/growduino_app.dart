@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:growduinoapp/ui/home/home_page.dart';
+import 'package:growduinoapp/ui/login/login_page.dart';
 
 class GrowduinoApp extends StatelessWidget {
   const GrowduinoApp({Key? key});
@@ -10,7 +10,7 @@ class GrowduinoApp extends StatelessWidget {
       home: Scaffold(
         body: Stack(
           children: [
-            const MyHomePage(),
+            const LoginPage(),
             Center(
               child: Container(
                 width: 300,
