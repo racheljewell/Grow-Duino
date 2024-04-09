@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:growduinoapp/ui/login/login_page.dart';
 
 class GrowduinoApp extends StatelessWidget {
-  const GrowduinoApp({Key? key});
+  const GrowduinoApp({super.key});
 
   // Function to create a text field with custom input decoration
   Widget buildTextField({
