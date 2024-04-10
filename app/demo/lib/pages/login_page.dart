@@ -4,8 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 class GrowduinoApp extends StatelessWidget {
   GrowduinoApp({super.key});
 
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
