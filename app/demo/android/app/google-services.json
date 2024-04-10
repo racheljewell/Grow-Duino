@@ -7,9 +7,66 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:824733657707:android:91757742fdb948b757df2e",
+        "android_client_info": {
+          "package_name": "com.example.growduino"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiMiI3R9QkOtEkn4oka52pRu6P3J3NCqA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:824733657707:android:ecee8c5939f3cc0d57df2e",
+        "android_client_info": {
+          "package_name": "com.example.growduinoapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiMiI3R9QkOtEkn4oka52pRu6P3J3NCqA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:824733657707:android:8abe724885c83b0f57df2e",
         "android_client_info": {
           "package_name": "com.google.firebase.presents.demo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiMiI3R9QkOtEkn4oka52pRu6P3J3NCqA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:824733657707:android:0feaf2247a8b047a57df2e",
+        "android_client_info": {
+          "package_name": "growduino.app"
         }
       },
       "oauth_client": [],
