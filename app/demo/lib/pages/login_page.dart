@@ -1,19 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:demo/pages/auth_service.dart';
 
 class GrowduinoApp extends StatelessWidget {
   GrowduinoApp({super.key});
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Future<void> signInWithEmailAndPassword(String email, String password) async {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  Future<String?> signInWithEmailAndPassword({
+    required String email, 
+    required String password
+  }) async {
+    print(email);
+    print(password);
     try {
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
       // Navigate to the home page or perform any other actions upon successful sign-in
+      return 'Success';
     } catch (e) {
       // Handle sign-in errors
       print('Sign-in error: $e');
+      return 'Error';
       // Show error message to the user
       // You can use Flutter's SnackBar or showDialog for this purpose
     }
@@ -75,18 +87,41 @@ class GrowduinoApp extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 85),
-                    buildTextField(
-                      labelText: 'Username',
-                      labelStyle: const TextStyle(fontSize: 20, color: Color.fromARGB(255, 1, 63, 39)),
-                      borderColor: const Color.fromARGB(255, 1, 63, 39),
-                      borderWidth: 1.0,
+                    TextField(
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                        enabledBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(color: Color.fromARGB(255, 1, 63, 39), width: 1.0),
+                        ),
+                        labelText: 'Username',
+                        labelStyle: const TextStyle(fontSize: 20, color: Color.fromARGB(255, 1, 63, 39)),
+                        border: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Color.fromARGB(255, 1, 63, 39)),
+                          borderRadius: BorderRadius.circular(45.0),
+                        ),
+                        focusedBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(color: Color.fromARGB(255, 1, 63, 39), width: 1.0 * 2),
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 30),
-                    buildTextField(
-                      labelText: 'Password',
-                      labelStyle: const TextStyle(fontSize: 20, color: Color.fromARGB(255, 1, 63, 39)),
-                      borderColor: const Color.fromARGB(255, 1, 63, 39),
-                      borderWidth: 1.0,
+                    TextField(
+                      controller: _passwordController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        enabledBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(color: Color.fromARGB(255, 1, 63, 39), width: 1.0),
+                        ),
+                        labelText: 'Password',
+                        labelStyle: const TextStyle(fontSize: 20, color: Color.fromARGB(255, 1, 63, 39)),
+                        border: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Color.fromARGB(255, 1, 63, 39)),
+                          borderRadius: BorderRadius.circular(45.0),
+                        ),
+                        focusedBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(color: Color.fromARGB(255, 1, 63, 39), width: 1.0 * 2),
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 30),
                     Container(
@@ -120,9 +155,11 @@ class GrowduinoApp extends StatelessWidget {
                             },
                           ),
                         ),
-                        onPressed: () {
+                        
+                        onPressed: () async {
                           // Replace 'email' and 'password' with the actual values entered by the user
-                          signInWithEmailAndPassword('email', 'password');
+                          final message = await signInWithEmailAndPassword(email: _emailController.text, password: _passwordController.text);
+                          print(message);
                         },
                         child: const Text(
                           'Sign In',
