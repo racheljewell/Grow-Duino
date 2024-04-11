@@ -6,9 +6,6 @@ import os
 import requests
 import logging
 from datetime import datetime
-
-
-app = initialize_app()
 # dotenv.load_dotenv() 
 
 logging.basicConfig(level=logging.INFO)

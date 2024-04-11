@@ -1,8 +1,8 @@
 from firebase_admin import credentials
 from google.cloud import firestore
-from dbConnection import establishConnection
+from .dbConnection import establishConnection
 from google.cloud.firestore_v1.base_query import FieldFilter
-import userSettings
+from . import userSettings
 
 import datetime
 
@@ -15,4 +15,4 @@ def getSettings(userID):
         
         return setting
 
-getSettings("user1").PrettyPrint()
+# getSettings("user1").PrettyPrint()
