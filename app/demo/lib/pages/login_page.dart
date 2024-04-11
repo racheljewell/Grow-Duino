@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
+import 'Profile.dart';
 
 class GrowduinoApp extends StatelessWidget {
   GrowduinoApp({super.key});
@@ -10,18 +11,17 @@ class GrowduinoApp extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   return MaterialApp.router(
-  //     title: 'Go Router',
-  //     routerConfig: _router,
-  //   );
-  // }
+  Widget buildRoutes(BuildContext context) {
+    return MaterialApp.router(
+      title: 'Go Router',
+      routerConfig: _router,
+    );
+  }
 
-  // final GoRouter _router = GoRouter(initialLocation: "/", routes: [
-  //   GoRoute(path: "/", builder: ((context, state) => const Profile())),
-  //   GoRoute(path: "/Statistics", builder: ((context, state) => const Statistics())),
-  // ]);
+  final GoRouter _router = GoRouter(routes: [
+    GoRoute(path: "/profile", builder: ((context, state) => const Profile())),
+    // GoRoute(path: "/statistics", builder: ((context, state) => const Statistics())),
+  ]);
 
   Future<String?> signInWithEmailAndPassword({
     required String email, 
