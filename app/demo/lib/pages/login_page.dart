@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:go_router/go_router.dart';
 import 'Profile.dart';
+import 'package:go_router/go_router.dart';
 
 class GrowduinoApp extends StatelessWidget {
   GrowduinoApp({super.key});
@@ -13,12 +13,15 @@ class GrowduinoApp extends StatelessWidget {
 
   Widget buildRoutes(BuildContext context) {
     return MaterialApp.router(
-      title: 'Go Router',
+      title: 'GrowDuino App',
       routerConfig: _router,
+      routerDelegate: _router.routerDelegate,
+      routeInformationParser: _router.routeInformationParser,
     );
   }
 
-  final GoRouter _router = GoRouter(routes: [
+  final _router = GoRouter(initialLocation: "/", routes: [
+    GoRoute(path: "/", builder: ((context, state) => const LoginPage())),
     GoRoute(path: "/profile", builder: ((context, state) => const Profile())),
     // GoRoute(path: "/statistics", builder: ((context, state) => const Statistics())),
   ]);
@@ -29,6 +32,7 @@ class GrowduinoApp extends StatelessWidget {
   }) async {
     print(email);
     print(password);
+
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
@@ -151,36 +155,42 @@ class GrowduinoApp extends StatelessWidget {
                           ),
                         ],
                       ),
-                      child: TextButton(
-                        style: ButtonStyle(
-                          minimumSize: MaterialStateProperty.all<Size>(
-                            const Size(100, 50),
-                          ),
-                          foregroundColor: MaterialStateProperty.all<Color>(const Color.fromARGB(255, 255, 251, 251)),
-                          overlayColor: MaterialStateProperty.resolveWith<Color?>(
-                            (Set<MaterialState> states) {
-                              if (states.contains(MaterialState.hovered)) {
-                                return const Color.fromARGB(255, 255, 251, 251).withOpacity(0.04);
-                              }
-                              if (states.contains(MaterialState.focused) || states.contains(MaterialState.pressed)) {
-                                return const Color.fromARGB(255, 255, 251, 251).withOpacity(0.12);
-                              }
-                              return null;
+                      child: Builder(
+                        builder: (context) {
+                          return TextButton(
+                            style: ButtonStyle(
+                              minimumSize: MaterialStateProperty.all<Size>(
+                                const Size(100, 50),
+                              ),
+                              foregroundColor: MaterialStateProperty.all<Color>(const Color.fromARGB(255, 255, 251, 251)),
+                              overlayColor: MaterialStateProperty.resolveWith<Color?>(
+                                (Set<MaterialState> states) {
+                                  if (states.contains(MaterialState.hovered)) {
+                                    return const Color.fromARGB(255, 255, 251, 251).withOpacity(0.04);
+                                  }
+                                  if (states.contains(MaterialState.focused) || states.contains(MaterialState.pressed)) {
+                                    return const Color.fromARGB(255, 255, 251, 251).withOpacity(0.12);
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                            
+                            onPressed: () async {
+                              // Replace 'email' and 'password' with the actual values entered by the user
+                              final message = await signInWithEmailAndPassword(email: _emailController.text, password: _passwordController.text);
+                              print(message);
+                              // _router.go("/profile");
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => Profile()));
                             },
-                          ),
-                        ),
-                        
-                        onPressed: () async {
-                          // Replace 'email' and 'password' with the actual values entered by the user
-                          final message = await signInWithEmailAndPassword(email: _emailController.text, password: _passwordController.text);
-                          print(message);
-                        },
-                        child: const Text(
-                          'Sign In',
-                          style: TextStyle(
-                            fontSize: 20,
-                          ),
-                        ),
+                            child: const Text(
+                              'Sign In',
+                              style: TextStyle(
+                                fontSize: 20,
+                              ),
+                            ),
+                          );
+                        }
                       ),
                     ),
                   ],
