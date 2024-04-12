@@ -23,5 +23,6 @@ class HumidityStatistics {
 
     final sum = dataList.map<double>((data) => data['data']['humidity'].toDouble()).reduce((value, element) => value + element);
     averageHumidity = sum / dataList.length;
+    averageHumidity = double.parse(averageHumidity.toStringAsFixed(1));
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'Profile.dart';
+import 'profile_page.dart';
 import 'package:go_router/go_router.dart';
 
 class GrowduinoApp extends StatelessWidget {

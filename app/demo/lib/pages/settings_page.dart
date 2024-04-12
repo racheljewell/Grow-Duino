@@ -11,7 +11,6 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  late String _settingsText;
   late LightSettings _lightSettings;
   late HumiditySettings _humiditySettings;
   late TemperatureSettings _temperatureSettings;
@@ -40,7 +39,6 @@ class _SettingsPageState extends State<SettingsPage> {
     if (jsonData != null) {
       Map<String, dynamic> settingsData = jsonDecode(jsonData);
       setState(() {
-        _settingsText = jsonData;
         _humiditySettings = HumiditySettings(
             settingsData['minHumidity'],
             settingsData['maxHumidity']
@@ -230,7 +228,6 @@ class _SettingsPageState extends State<SettingsPage> {
     String jsonData = jsonEncode(settingsData);
     await prefs.setString('settingsData', jsonData);
     setState(() {
-      _settingsText = jsonData;
       _humiditySettings = HumiditySettings(
           settingsData['minHumidity'].toString(),
           settingsData['maxHumidity'].toString()
@@ -254,11 +251,12 @@ class _SettingsPageState extends State<SettingsPage> {
 }
 
 Future<void> pushSettings(Map<String, dynamic> settingsData) async {
-  final url = Uri.parse('http://10.0.2.2:5001/grow-duino/us-central1/storeSettings');
+  final url = Uri.parse('http://10.0.2.2:5001/grow-duino/us-central1/saveSettings');
   final headers = <String, String>{
     'Content-Type': 'application/json; charset=UTF-8',
   };
   final body = jsonEncode(settingsData);
+  print(body);
 
   final response = await http.post(url, headers: headers, body: body);
 

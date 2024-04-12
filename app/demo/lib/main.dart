@@ -14,6 +14,6 @@ Future<void> main() async {
   );
 
 
-  runApp(const HumidityDisplay());
+  runApp(GrowduinoApp());
 
 }
