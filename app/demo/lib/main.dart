@@ -1,7 +1,8 @@
+import 'package:demo/pages/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-import 'package:demo/pages/login_page.dart';
+import 'package:demo/pages/settings_page.dart';
 
 
 Future<void> main() async {
@@ -12,7 +13,7 @@ Future<void> main() async {
   );
 
 
-  runApp(GrowduinoApp());
+  runApp(const SettingsPage());
 
 }
 
