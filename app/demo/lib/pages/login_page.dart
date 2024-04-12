@@ -6,8 +6,6 @@ import 'package:go_router/go_router.dart';
 class GrowduinoApp extends StatelessWidget {
   GrowduinoApp({super.key});
 
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
