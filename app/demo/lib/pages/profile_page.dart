@@ -59,9 +59,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<void> fetchRecentData() async {
     try {
       final response = await http.post(
-        Uri.parse('http://10.0.2.2:5001/grow-duino/us-central1/getRecentData'),
+        Uri.parse('https://getrecentdata-7frthucguq-uc.a.run.app'),
       );
-
+      print(response.body);
       if (response.statusCode == 200) {
         final jsonData = jsonDecode(response.body);
         setState(() {
@@ -71,6 +71,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           lightsValue = (recentData['lights'] ?? 0).toDouble();
         });
       } else {
+        
         throw Exception('Failed to fetch data');
       }
     } catch (e) {

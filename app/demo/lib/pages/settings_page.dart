@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:demo/pages/profile_page.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -19,6 +18,9 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   void initState() {
+    _lightSettings = LightSettings('', '');
+    _humiditySettings = HumiditySettings('', '');
+    _temperatureSettings = TemperatureSettings('', '');
     _initializeSettings();
     super.initState();
   }
@@ -27,6 +29,7 @@ class _SettingsPageState extends State<SettingsPage> {
     try {
       Map<String, dynamic> responseData = await pullSettings();
       _saveData(responseData);
+      await _loadData(); // Load saved data
     } catch (e) {
       print('Error: $e');
     } finally {
@@ -44,16 +47,16 @@ class _SettingsPageState extends State<SettingsPage> {
       Map<String, dynamic> settingsData = jsonDecode(jsonData);
       setState(() {
         _humiditySettings = HumiditySettings(
-            settingsData['minHumidity'],
-            settingsData['maxHumidity']
+            settingsData['minHumidity'] ?? '',
+            settingsData['maxHumidity'] ?? ''
         );
         _temperatureSettings = TemperatureSettings(
-            settingsData['minTemperature'],
-            settingsData['maxTemperature']
+            settingsData['minTemperature'] ?? '',
+            settingsData['maxTemperature'] ?? ''
         );
         _lightSettings = LightSettings(
-            settingsData['lightsOn'] ?? "None",
-            settingsData['lightsOff'] ?? "None",
+            settingsData['lightsOn'] ?? '',
+            settingsData['lightsOff'] ?? '',
         );
       });
     }
@@ -61,7 +64,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Future<Map<String, dynamic>> pullSettings() async {
     final response = await http.post(
-      Uri.parse('http://10.0.2.2:5001/grow-duino/us-central1/getSettings'),
+      Uri.parse('https://getsettings-7frthucguq-uc.a.run.app'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -124,19 +127,18 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-
   Widget _buildSlider(String title, String min, String max) {
     double minValue;
     double maxValue;
     int divisions;
 
     if (title == 'Humidity') {
-      minValue = double.parse(_humiditySettings.min);
-      maxValue = double.parse(_humiditySettings.max);
+      minValue = double.tryParse(_humiditySettings.min) ?? 0;
+      maxValue = double.tryParse(_humiditySettings.max) ?? 100;
       divisions = 100;
     } else if (title == 'Temperature') {
-      minValue = double.parse(_temperatureSettings.min);
-      maxValue = double.parse(_temperatureSettings.max);
+      minValue = double.tryParse(_temperatureSettings.min) ?? 0;
+      maxValue = double.tryParse(_temperatureSettings.max) ?? 100;
       divisions = 100;
     } else {
       minValue = timeToMinutes(_lightSettings.on).toDouble();
@@ -169,7 +171,6 @@ class _SettingsPageState extends State<SettingsPage> {
         });
       },
     );
-
   }
 
   // Convert "hh:mm:ss" string to minutes
@@ -187,7 +188,6 @@ class _SettingsPageState extends State<SettingsPage> {
     return '$hours:${remainingMinutes.toString().padLeft(2, '0')}';
   }
 
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -197,15 +197,12 @@ class _SettingsPageState extends State<SettingsPage> {
           title: const Text("Settings", style: TextStyle(color: Color.fromARGB(255, 255, 251, 251))),
           backgroundColor: const Color.fromARGB(255, 1, 63, 39),
           leading: BackButton(
-            color: Colors.lime,
-            onPressed: () => Navigator.of(context).pop()),
-            ),
+            color: const Color.fromARGB(255, 255, 251, 251),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ),
         drawer: Drawer(
-          // Add a ListView to the drawer. This ensures the user can scroll
-          // through the options in the drawer if there isn't enough vertical
-          // space to fit everything.
           child: ListView(
-            // Important: Remove any padding from the ListView.
             padding: EdgeInsets.zero,
             children: [
               const DrawerHeader(
@@ -217,14 +214,13 @@ class _SettingsPageState extends State<SettingsPage> {
               ListTile(
                 title: const Text("Home"),
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const Profile()));
+                  // Navigate to profile page
                 },
               ),
               ListTile(
                 title: const Text('Item 2'),
                 onTap: () {
-                  // Update the state of the app.
-                  // ...
+                  // Handle item 2 tap
                 },
               ),
             ],
@@ -246,20 +242,19 @@ class _SettingsPageState extends State<SettingsPage> {
             try {
               Map<String, dynamic> settingsData = convertSettingsToJson(_lightSettings, _humiditySettings, _temperatureSettings);
               final success = await pushSettings(settingsData);
-              
               if (success) {
-                print("SUCCESS!!!");
+                print("Success");
                 _showConfirmationMessage(); // Show confirmation message
               }
             } catch (e) {
               print('Error: $e');
             }
           },
-
           backgroundColor: const Color.fromARGB(255, 1, 63, 39),
           child: const Icon(
-                        Icons.save,
-                        color: Color.fromARGB(255, 255, 251, 251),),
+            Icons.save,
+            color: Color.fromARGB(255, 255, 251, 251),
+          ),
         ),
       ),
     );
@@ -279,11 +274,10 @@ class _SettingsPageState extends State<SettingsPage> {
           settingsData['minTemperature'].toString(),
           settingsData['maxTemperature'].toString()
       );
-      List<String> on = settingsData['lightsOn'].split(':');
-      List<String> off = settingsData['lightsOff'].split(':');
-      String onTime = "${on[0]}:${on[1]}";
-      String offTime = "${off[0]}:${off[1]}";
-
+      List<String> onT = settingsData['lightsOn'].split(':');
+      List<String> offT = settingsData['lightsOff'].split(':');
+      String onTime = "${onT[0]}:${onT[1]}";
+      String offTime = "${offT[0]}:${offT[1]}";
 
       _lightSettings = LightSettings(
         onTime,
@@ -302,26 +296,25 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
     );
   }
-
 }
 
 Future<bool> pushSettings(Map<String, dynamic> settingsData) async {
-  final url = Uri.parse('http://10.0.2.2:5001/grow-duino/us-central1/saveSettings');
+  final url = Uri.parse('https://savesettings-7frthucguq-uc.a.run.app');
   final headers = <String, String>{
     'Content-Type': 'application/json; charset=UTF-8',
   };
   final body = jsonEncode(settingsData);
-  print(body);
 
   final response = await http.post(url, headers: headers, body: body);
 
   if (response.statusCode == 200) {
+    print("Save Success");
     return true; // Indicate success
   } else {
+    print(response.body);
     return false; // Indicate failure
   }
 }
-
 
 class LightSettings {
   String on;

@@ -20,6 +20,8 @@ class TemperatureStatistics {
 
     maxTemperature = dataList.map<double>((data) => data['data']['temperature'].toDouble()).reduce((value, element) => value > element ? value : element);
     minTemperature = dataList.map<double>((data) => data['data']['temperature'].toDouble()).reduce((value, element) => value < element ? value : element);
+    maxTemperature = double.parse((maxTemperature.toStringAsFixed(1)));
+    minTemperature = double.parse((minTemperature.toStringAsFixed(1)));
 
     final sum = dataList.map<double>((data) => data['data']['temperature'].toDouble()).reduce((value, element) => value + element);
     averageTemperature = sum / dataList.length;

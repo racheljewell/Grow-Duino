@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:demo/components/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
@@ -37,11 +38,13 @@ class _TemperatureDisplayState extends State<TemperatureDisplay> {
   }
 
   Future<void> fetchDataFromFirestore() async {
-    final url = Uri.parse('http://10.0.2.2:5001/grow-duino/us-central1/getData');
+    final url = Uri.parse('https://getdata-7frthucguq-uc.a.run.app');
 
     try {
       final response = await http.post(url);
+      print(response.body);
       if (response.statusCode == 200) {
+        
         final jsonData = jsonDecode(response.body);
         setState(() {
           dataList = jsonData['list'].cast<Map<String, dynamic>>();
@@ -65,7 +68,7 @@ class _TemperatureDisplayState extends State<TemperatureDisplay> {
     return Container(
       child: Container(
         decoration: BoxDecoration( 
-          color: const Color.fromARGB(255, 135, 174, 143),
+          color: context.theme.appColors.secondary,
           borderRadius: BorderRadius.circular(20.0),
           boxShadow: [
             BoxShadow(
@@ -83,8 +86,8 @@ class _TemperatureDisplayState extends State<TemperatureDisplay> {
         child: Center(
           child: Text(
               number,
-              style: const TextStyle(
-                color: Color.fromARGB(255, 51, 51, 51),
+              style:  TextStyle(
+                color: context.theme.appColors.onSecondary,
                 fontSize: 20,
               ),
             ),
@@ -100,7 +103,7 @@ class _TemperatureDisplayState extends State<TemperatureDisplay> {
         height: 68, // Height of each rectangle
         margin: const EdgeInsets.all(5.0), // Margin between rectangles
         decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 217, 217, 217), // Color of the rectangles
+          color: context.theme.appColors.onPrimary, // Color of the rectangles
           borderRadius: BorderRadius.circular(20), // Border radius to make rectangles "hotdog" shaped
           boxShadow: [
             BoxShadow(
@@ -117,8 +120,8 @@ class _TemperatureDisplayState extends State<TemperatureDisplay> {
               padding: const EdgeInsets.only(left: 25),
               child: Text(
                 title,
-                style: const TextStyle(
-                  color: Color.fromARGB(255, 51, 51, 51),
+                style: TextStyle(
+                  color: context.theme.appColors.onSecondary,
                   fontSize: 28.0,
                 ),
               ),
@@ -143,7 +146,7 @@ class _TemperatureDisplayState extends State<TemperatureDisplay> {
     return Center(
       child: Container(
         decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 1, 63, 39),
+          color: context.theme.appColors.primary,
           borderRadius: BorderRadius.circular(20.0),
         ),
         width: 375, // Total width of the container
@@ -171,7 +174,7 @@ class _TemperatureDisplayState extends State<TemperatureDisplay> {
         appBar: AppBar(
           title: const Text("Temperature", style: TextStyle(color: Color.fromARGB(255, 255, 251, 251))),
           backgroundColor: const Color.fromARGB(255, 1, 63, 39),
-          leading: BackButton(color: Colors.lime,
+          leading: BackButton(color: const Color.fromARGB(255, 255, 251, 251),
           onPressed: () => Navigator.of(context).pop()),
         ),
         backgroundColor: const Color.fromARGB(255, 180, 228, 196),
@@ -181,7 +184,7 @@ class _TemperatureDisplayState extends State<TemperatureDisplay> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(top: 20.0, left: 10.0, right: 10.0),
-                    child: LineChart1(temperatureValues: dataList.map<double>((data) => data['data']['temperature'].toDouble()).toList()),
+                    child: LineChart1(temperatureValues: dataList.map<double>((data) => data['data']['temperature'].toDouble()).toList(), dataList: dataList),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(0.5),
@@ -198,8 +201,9 @@ class _TemperatureDisplayState extends State<TemperatureDisplay> {
 
 class LineChart1 extends StatelessWidget {
   final List<double> temperatureValues;
+  final List<Map<String, dynamic>> dataList;
 
-  const LineChart1({required this.temperatureValues});
+  const LineChart1({required this.temperatureValues, required this.dataList});
 
   @override
   Widget build(BuildContext context) {
@@ -215,7 +219,7 @@ class LineChart1 extends StatelessWidget {
                     border: Border.all(color: Colors.grey), // Border color
                     borderRadius: BorderRadius.circular(10), // Border radius
                   ),
-                  child: _LineChart(isShowingMainData: true, temperatureValues: temperatureValues),
+                  child: _LineChart(isShowingMainData: true, temperatureValues: temperatureValues, dataList: dataList),
                 ),
               ),
             ],
@@ -227,10 +231,11 @@ class LineChart1 extends StatelessWidget {
 }
 
 class _LineChart extends StatelessWidget {
-  const _LineChart({required this.isShowingMainData, required this.temperatureValues});
+  const _LineChart({required this.isShowingMainData, required this.temperatureValues, required this.dataList});
 
   final bool isShowingMainData;
   final List<double> temperatureValues;
+  final List<Map<String, dynamic>> dataList;
 
   @override
   Widget build(BuildContext context) {
@@ -325,10 +330,21 @@ class _LineChart extends StatelessWidget {
       );
 
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
-    final time = DateTime.now().add(Duration(minutes: value.toInt())); // Assuming value represents minutes
-    final hour = time.hour.toString().padLeft(2, '0');
-    final minute = time.minute.toString().padLeft(2, '0');
-    return Text('$hour:$minute', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16));
+    if (value == 0) {
+      // Display the timestamp of the first data point
+      final firstTimestamp = DateTime.parse(dataList.last['time']); // Assuming 'timestamp' key holds the timestamp value
+      final hour = firstTimestamp.hour.toString().padLeft(2, '0');
+      final minute = firstTimestamp.minute.toString().padLeft(2, '0');
+      return Text('$hour:$minute', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16));
+    } else if (value == temperatureValues.length - 1) {
+      // Display the timestamp of the last data point
+      final lastTimestamp = DateTime.parse(dataList.first['time']); // Assuming 'timestamp' key holds the timestamp value
+      final hour = lastTimestamp.hour.toString().padLeft(2, '0');
+      final minute = lastTimestamp.minute.toString().padLeft(2, '0');
+      return Text('$hour:$minute', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16));
+    } else {
+      return Container(); // Return empty container for all other values
+    }
   }
 
   SideTitles get bottomTitles => SideTitles(
@@ -371,5 +387,4 @@ class _LineChart extends StatelessWidget {
         reservedSize: 20,
       );
 }
-
 
