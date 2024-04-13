@@ -4,24 +4,24 @@ import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:demo/pages/humidity_stats.dart';
+import 'package:demo/pages/temperature_stats.dart';
 
-class HumidityDisplay extends StatefulWidget {
-  const HumidityDisplay({Key? key}) : super(key: key);
+class TemperatureDisplay extends StatefulWidget {
+  const TemperatureDisplay({Key? key}) : super(key: key);
 
   @override
-  _HumidityDisplayState createState() => _HumidityDisplayState();
+  _TemperatureDisplayState createState() => _TemperatureDisplayState();
 }
 
-class _HumidityDisplayState extends State<HumidityDisplay> {
+class _TemperatureDisplayState extends State<TemperatureDisplay> {
   List<Map<String, dynamic>> dataList = [];
   late Timer timer;
-  late HumidityStatistics stats; // Variable to store statistics
+  late TemperatureStatistics stats; // Variable to store statistics
 
   @override
   void initState() {
     super.initState();
-    stats = HumidityStatistics(); // Initialize stats variable
+    stats = TemperatureStatistics(); // Initialize stats variable
     // Fetch data immediately when the widget initializes
     fetchDataFromFirestore();
 
@@ -152,9 +152,9 @@ class _HumidityDisplayState extends State<HumidityDisplay> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            _buildHotdogBox("High", stats.maxHumidity.toString()),
-            _buildHotdogBox("Low", stats.minHumidity.toString()),
-            _buildHotdogBox("Average", stats.averageHumidity.toString()),
+            _buildHotdogBox("High", stats.maxTemperature.toString()),
+            _buildHotdogBox("Low", stats.minTemperature.toString()),
+            _buildHotdogBox("Average", stats.averageTemperature.toString()),
           ],
         ),
       ),
@@ -169,7 +169,7 @@ class _HumidityDisplayState extends State<HumidityDisplay> {
       theme: ThemeData(scaffoldBackgroundColor: const Color.fromARGB(255, 180, 228, 196)),
       home: Scaffold(
         appBar: AppBar(
-          title: const Text("Humidity", style: TextStyle(color: Color.fromARGB(255, 255, 251, 251))),
+          title: const Text("Temperature", style: TextStyle(color: Color.fromARGB(255, 255, 251, 251))),
           backgroundColor: const Color.fromARGB(255, 1, 63, 39),
           leading: BackButton(color: Colors.lime,
           onPressed: () => Navigator.of(context).pop()),
@@ -181,7 +181,7 @@ class _HumidityDisplayState extends State<HumidityDisplay> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(top: 20.0, left: 10.0, right: 10.0),
-                    child: LineChart1(humidityValues: dataList.map<double>((data) => data['data']['humidity'].toDouble()).toList()),
+                    child: LineChart1(temperatureValues: dataList.map<double>((data) => data['data']['temperature'].toDouble()).toList()),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(0.5),
@@ -197,9 +197,9 @@ class _HumidityDisplayState extends State<HumidityDisplay> {
 }
 
 class LineChart1 extends StatelessWidget {
-  final List<double> humidityValues;
+  final List<double> temperatureValues;
 
-  const LineChart1({required this.humidityValues});
+  const LineChart1({required this.temperatureValues});
 
   @override
   Widget build(BuildContext context) {
@@ -215,7 +215,7 @@ class LineChart1 extends StatelessWidget {
                     border: Border.all(color: Colors.grey), // Border color
                     borderRadius: BorderRadius.circular(10), // Border radius
                   ),
-                  child: _LineChart(isShowingMainData: true, humidityValues: humidityValues),
+                  child: _LineChart(isShowingMainData: true, temperatureValues: temperatureValues),
                 ),
               ),
             ],
@@ -227,10 +227,10 @@ class LineChart1 extends StatelessWidget {
 }
 
 class _LineChart extends StatelessWidget {
-  const _LineChart({required this.isShowingMainData, required this.humidityValues});
+  const _LineChart({required this.isShowingMainData, required this.temperatureValues});
 
   final bool isShowingMainData;
-  final List<double> humidityValues;
+  final List<double> temperatureValues;
 
   @override
   Widget build(BuildContext context) {
@@ -244,16 +244,16 @@ class _LineChart extends StatelessWidget {
           color: const Color.fromARGB(255, 255, 251, 251)
         ),
         child: LineChart(
-          isShowingMainData ? sampleData1(humidityValues) : sampleData2(humidityValues),
+          isShowingMainData ? sampleData1(temperatureValues) : sampleData2(temperatureValues),
           duration: const Duration(milliseconds: 250),
         ),
       ),
     );
   }
 
-  LineChartData sampleData1(List<double> humidityValues) {
-    final spots = List.generate(humidityValues.length, (index) {
-      return FlSpot(index.toDouble(), humidityValues[index].toDouble());
+  LineChartData sampleData1(List<double> temperatureValues) {
+    final spots = List.generate(temperatureValues.length, (index) {
+      return FlSpot(index.toDouble(), temperatureValues[index].toDouble());
     });
 
     return LineChartData(
@@ -273,15 +273,15 @@ class _LineChart extends StatelessWidget {
         ),
       ],
       minX: 0,
-      maxX: humidityValues.length.toDouble() - 1,
+      maxX: temperatureValues.length.toDouble() - 1,
       maxY: 100, // Max value for y-axis
       minY: 40, // Min value for y-axis
     );
   }
 
-  LineChartData sampleData2(List<double> humidityValues) {
+  LineChartData sampleData2(List<double> temperatureValues) {
     // Sample data 2 if needed
-    return sampleData1(humidityValues); // Returning the same data for now
+    return sampleData1(temperatureValues); // Returning the same data for now
   }
 
   LineTouchData get lineTouchData1 => LineTouchData(
@@ -308,7 +308,7 @@ class _LineChart extends StatelessWidget {
         ),
         leftTitles: AxisTitles(
           axisNameWidget: const Text(
-            'Humidity (%)'
+            'Temperature (F)'
           ),
           sideTitles: leftTitles(),
         ),

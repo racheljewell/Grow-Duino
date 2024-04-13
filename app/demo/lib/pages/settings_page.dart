@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:demo/pages/profile_page.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -14,22 +17,25 @@ class _SettingsPageState extends State<SettingsPage> {
   late LightSettings _lightSettings;
   late HumiditySettings _humiditySettings;
   late TemperatureSettings _temperatureSettings;
+  bool _isLoading = true; // Track loading state
 
   @override
   void initState() {
-    super.initState();
     _initializeSettings();
-    _loadData();
+    super.initState();
   }
 
   Future<void> _initializeSettings() async {
     try {
       Map<String, dynamic> responseData = await pullSettings();
       _saveData(responseData);
-      // Load data after saving
-      _loadData();
     } catch (e) {
       print('Error: $e');
+    } finally {
+      // Set loading state to false after settings are fetched
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -48,8 +54,8 @@ class _SettingsPageState extends State<SettingsPage> {
             settingsData['maxTemperature']
         );
         _lightSettings = LightSettings(
-            settingsData['lightsOn'],
-            settingsData['lightsOff'],
+            settingsData['lightsOn'] ?? "None",
+            settingsData['lightsOff'] ?? "None",
         );
       });
     }
@@ -192,8 +198,41 @@ class _SettingsPageState extends State<SettingsPage> {
         appBar: AppBar(
           title: const Text("Settings", style: TextStyle(color: Color.fromARGB(255, 255, 251, 251))),
           backgroundColor: const Color.fromARGB(255, 1, 63, 39),
+          leading: BackButton(
+            color: Colors.lime,
+            onPressed: () => Navigator.of(context).pop()),
+            ),
+        drawer: Drawer(
+          // Add a ListView to the drawer. This ensures the user can scroll
+          // through the options in the drawer if there isn't enough vertical
+          // space to fit everything.
+          child: ListView(
+            // Important: Remove any padding from the ListView.
+            padding: EdgeInsets.zero,
+            children: [
+              const DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                ),
+                child: Text('Drawer Header'),
+              ),
+              ListTile(
+                title: const Text("Home"),
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const Profile()));
+                },
+              ),
+              ListTile(
+                title: const Text('Item 2'),
+                onTap: () {
+                  // Update the state of the app.
+                  // ...
+                },
+              ),
+            ],
+          ),
         ),
-        body: Padding(
+        body: _isLoading ? const Center(child: CircularProgressIndicator()) : Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -208,11 +247,17 @@ class _SettingsPageState extends State<SettingsPage> {
           onPressed: () async {
             try {
               Map<String, dynamic> settingsData = convertSettingsToJson(_lightSettings, _humiditySettings, _temperatureSettings);
-              await pushSettings(settingsData);
+              final success = await pushSettings(settingsData);
+              
+              if (success) {
+                print("SUCCESS!!!");
+                _showConfirmationMessage(); // Show confirmation message
+              }
             } catch (e) {
               print('Error: $e');
             }
           },
+
           backgroundColor: const Color.fromARGB(255, 1, 63, 39),
           child: const Icon(
                         Icons.save,
@@ -248,9 +293,21 @@ class _SettingsPageState extends State<SettingsPage> {
       );
     });
   }
+
+  void _showConfirmationMessage() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Settings saved successfully', style: TextStyle(color: Colors.black),),
+        duration: Duration(seconds: 2), // Set the duration for the snackbar
+        behavior: SnackBarBehavior.floating, // Set behavior to floating
+        padding: EdgeInsets.only(bottom: 16, right: 16), // Adjust padding to position it at the bottom right
+      ),
+    );
+  }
+
 }
 
-Future<void> pushSettings(Map<String, dynamic> settingsData) async {
+Future<bool> pushSettings(Map<String, dynamic> settingsData) async {
   final url = Uri.parse('http://10.0.2.2:5001/grow-duino/us-central1/saveSettings');
   final headers = <String, String>{
     'Content-Type': 'application/json; charset=UTF-8',
@@ -260,10 +317,13 @@ Future<void> pushSettings(Map<String, dynamic> settingsData) async {
 
   final response = await http.post(url, headers: headers, body: body);
 
-  if (response.statusCode != 200) {
-    throw Exception('Failed to push settings');
+  if (response.statusCode == 200) {
+    return true; // Indicate success
+  } else {
+    return false; // Indicate failure
   }
 }
+
 
 class LightSettings {
   String on;
