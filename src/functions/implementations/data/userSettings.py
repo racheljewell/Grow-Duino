@@ -8,8 +8,8 @@ def ToSettings(userID, source):
         offTime=s.get('lightsOff'),
         minHumidity=s.get('minHumidity'),
         maxHumidity=s.get('maxHumidity'),
-        minTemp=s.get('minTemp'),
-        maxTemp=s.get('maxTemp')
+        minTemp=s.get('minTemperature'),
+        maxTemp=s.get('maxTemperature')
     )
     return settings
 
