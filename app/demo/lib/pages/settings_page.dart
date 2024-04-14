@@ -18,6 +18,7 @@ class Settings extends StatelessWidget {
       builder: (context, _) => MaterialApp(
         theme: AppTheme.light,
         darkTheme: AppTheme.dark,
+        themeMode: context.watch<AppTheme>().themeMode,
         home: const SettingsPage(),
       ),
     );
@@ -44,6 +45,11 @@ class _SettingsPageState extends State<SettingsPage> {
     _temperatureSettings = TemperatureSettings('', '');
     _initializeSettings();
     super.initState();
+  }
+
+  void updateThemeMode(ThemeMode themeMode) {
+    // 5. Update ThemeMode.
+    context.read<AppTheme>().themeMode = themeMode;
   }
 
   Future<void> _initializeSettings() async {
@@ -295,9 +301,14 @@ class _SettingsPageState extends State<SettingsPage> {
               _buildSettingsCard("Lighting", _lightSettings.on, _lightSettings.off),
               _buildSettingsCard('Humidity', _humiditySettings.min, _humiditySettings.max),
               _buildSettingsCard('Temperature', _temperatureSettings.min, _temperatureSettings.max),
+              // TextButton(
+              //     onPressed: () => updateThemeMode(ThemeMode.dark),
+              //     child: const Text('Dark'),
+              //   ),
             ],
           ),
         ),
+        
         floatingActionButton: FloatingActionButton(
           onPressed: () async {
             try {
@@ -311,10 +322,10 @@ class _SettingsPageState extends State<SettingsPage> {
               print('Error: $e');
             }
           },
-          backgroundColor: const Color.fromARGB(255, 1, 63, 39),
-          child: const Icon(
+          backgroundColor: context.theme.appColors.primary,
+          child: Icon(
             Icons.save,
-            color: Color.fromARGB(255, 255, 251, 251),
+            color: context.theme.appColors.onPrimary,
           ),
         ),
       ),
@@ -408,3 +419,41 @@ Map<String, dynamic> convertSettingsToJson(LightSettings lightSettings, Humidity
     'maxTemperature': int.parse(temperatureSettings.max),
   };
 }
+
+class ToggleSwitch extends StatefulWidget {
+
+  @override
+
+  _ToggleSwitchState createState() => _ToggleSwitchState();
+
+}
+
+class _ToggleSwitchState extends State<ToggleSwitch> {
+  bool isSwitched = false;
+
+  void _toggleSwitch(bool value) {
+    setState(() {
+      isSwitched = value;
+      if (isSwitched) {
+        // updateThemeMode(ThemeMode.dark);
+        print("DARK");
+      } else {
+        Provider.of<AppTheme>(context, listen: false).themeMode = ThemeMode.light;
+        print("LIGHT");
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Switch(
+      value: isSwitched,
+      onChanged: _toggleSwitch,
+      activeTrackColor: context.theme.appColors.primary,
+      activeColor: Colors.black,
+      inactiveThumbImage: const AssetImage('lib/assets/logo/lightbulb.png'),
+      activeThumbImage: const AssetImage('lib/assets/logo/moon.png'),
+    );
+  }
+}
+
