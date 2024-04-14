@@ -194,17 +194,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 ListTile(
                   title: Text(
-                    "Humidity Stats",
-                    style: TextStyle(
-                      color: context.theme.appColors.onSecondary,
-                    ),
-                    ),
-                  onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const HumidityDisplay()));
-                  },
-                ),
-                ListTile(
-                  title: Text(
                     "Temperature Stats",
                     style: TextStyle(
                       color: context.theme.appColors.onSecondary,
@@ -214,60 +203,79 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => const TemperatureDisplay()));
                   },
                 ),
+                ListTile(
+                  title: Text(
+                    "Humidity Stats",
+                    style: TextStyle(
+                      color: context.theme.appColors.onSecondary,
+                    ),
+                    ),
+                  onTap: () {
+                    
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => const HumidityDisplay()));
+
+                  },
+                ),
               ],
             ),
           ),
-          body: Scaffold(
-            backgroundColor: context.theme.appColors.background,
-            body: Padding(
-              padding: const EdgeInsets.all(30),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+          body: Expanded(
+            child: Scaffold(
+              backgroundColor: context.theme.appColors.background,
+              body: ListView(
                 children: [
-                  _buildNumberDisplayBox(
-                    "lib/assets/logo/thermometer.png",
-                    "Temperature",
-                    temperatureValue.toString(),
-                    () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const TemperatureDisplay(),
-                        ),
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                  _buildNumberDisplayBox(
-                    "lib/assets/logo/humidity.png",
-                    "Humidity",
-                    temperatureValue.toString(),
-                    () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const HumidityDisplay(),
-                        ),
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 70),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      border: Border.all(
-                        color: context.theme.appColors.primary,
-                        width: 2,
+                  Padding(
+                  padding: const EdgeInsets.all(30),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      _buildNumberDisplayBox(
+                        "lib/assets/logo/thermometer.png",
+                        "Temperature",
+                        temperatureValue.toString(),
+                        () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const TemperatureDisplay(),
+                            ),
+                          );
+                        },
                       ),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child: const Image(
-                        image: AssetImage('lib/assets/img/plant.png'),
+                      const SizedBox(height: 10),
+                      _buildNumberDisplayBox(
+                        "lib/assets/logo/humidity.png",
+                        "Humidity",
+                        humidityValue.toString(),
+                        () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const HumidityDisplay(),
+                            ),
+                          );
+                        },
                       ),
-                    ),
+                      const SizedBox(height: 70),
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(
+                            color: context.theme.appColors.primary,
+                            width: 2,
+                          ),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: const Image(
+                            image: AssetImage('lib/assets/img/plant.png'),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
+                ]
               ),
             ),
           ),
