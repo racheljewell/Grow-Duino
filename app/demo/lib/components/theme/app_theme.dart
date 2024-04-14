@@ -75,17 +75,18 @@ class AppTheme with ChangeNotifier {
   }();
 
   static final _darkAppColors = AppColorsExtension(
-    primary: const Color(0xffbb86fc),
-    onPrimary: Colors.black,
-    secondary: const Color(0xff03dac6),
-    onSecondary: Colors.black,
-    error: const Color(0xffcf6679),
+    primary: const Color(0xff6D9A89),
+    onPrimary: const Color(0xffF0F0F0),
+    secondary: const Color(0xff5B7E6B),
+    onSecondary: const Color(0xffF0F0F0),
+    error: const Color(0xffCF6679),
     onError: Colors.black,
-    background: const Color(0xff121212),
-    onBackground: Colors.white,
-    surface: const Color(0xff121212),
-    onSurface: Colors.white,
-  );
+    background: const Color(0xff333333),
+    onBackground: const Color(0xffF0F0F0),
+    surface: const Color(0xff666666),
+    onSurface: const Color(0xffF0F0F0),
+);
+
 
   static final _darkTextTheme = SimpleAppTextThemeExtension(
     body1: AppTypography.body1.copyWith(color: _darkAppColors.onBackground),

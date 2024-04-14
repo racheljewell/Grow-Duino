@@ -9,7 +9,6 @@ import datetime
 app = initialize_app()
 
 def pushMockData():
-   
         # Initialize Firestore client with the loaded credentials
     db = firestore.Client(project='grow-duino', credentials=google_creds)
     if db is not None:
