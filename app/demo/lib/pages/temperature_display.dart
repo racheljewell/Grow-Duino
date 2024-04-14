@@ -1,11 +1,27 @@
 import 'dart:async';
 import 'package:demo/components/theme/app_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:demo/pages/temperature_stats.dart';
+import 'package:provider/provider.dart';
+
+class Temperature extends StatelessWidget {
+  const Temperature({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => AppTheme(),
+      builder: (context, _) => MaterialApp(
+        theme: AppTheme.light,
+        darkTheme: AppTheme.dark,
+        home: const TemperatureDisplay(),
+      ),
+    );
+  }
+}
 
 class TemperatureDisplay extends StatefulWidget {
   const TemperatureDisplay({Key? key}) : super(key: key);
@@ -169,18 +185,18 @@ class _TemperatureDisplayState extends State<TemperatureDisplay> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(scaffoldBackgroundColor: const Color.fromARGB(255, 180, 228, 196)),
+      theme: ThemeData(scaffoldBackgroundColor: context.theme.appColors.background),
       home: Scaffold(
         appBar: AppBar(
-          title: const Text("Temperature", style: TextStyle(color: Color.fromARGB(255, 255, 251, 251))),
-          backgroundColor: const Color.fromARGB(255, 1, 63, 39),
-          leading: BackButton(color: const Color.fromARGB(255, 255, 251, 251),
+          title: Text("Temperature", style: TextStyle(color: context.theme.appColors.onPrimary)),
+          backgroundColor: context.theme.appColors.primary,
+          leading: BackButton(color: context.theme.appColors.onPrimary,
           onPressed: () => Navigator.of(context).pop()),
         ),
-        backgroundColor: const Color.fromARGB(255, 180, 228, 196),
+        backgroundColor: context.theme.appColors.background,
         body: dataList.isEmpty
             ? const Center(child: CircularProgressIndicator())
-            : Column(
+            : ListView(
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(top: 20.0, left: 10.0, right: 10.0),
@@ -246,7 +262,7 @@ class _LineChart extends StatelessWidget {
         decoration: BoxDecoration(
           border: Border.all(color: Colors.grey), // Border color
           borderRadius: BorderRadius.circular(10), // Border radius
-          color: const Color.fromARGB(255, 255, 251, 251)
+          color: context.theme.appColors.onPrimary
         ),
         child: LineChart(
           isShowingMainData ? sampleData1(temperatureValues) : sampleData2(temperatureValues),
@@ -269,7 +285,7 @@ class _LineChart extends StatelessWidget {
       lineBarsData: [
         LineChartBarData(
           isCurved: true,
-          color: const Color.fromARGB(255, 1, 63, 39),
+          color: const Color(0xff013F27),
           barWidth: 4,
           isStrokeCapRound: true,
           dotData: const FlDotData(show: false),
@@ -322,8 +338,8 @@ class _LineChart extends StatelessWidget {
   FlBorderData get borderData => FlBorderData(
         show: true,
         border: const Border(
-          bottom: BorderSide(color: Colors.green, width: 1),
-          left: BorderSide(color: Colors.green, width: 1),
+          bottom: BorderSide(color: Color(0xff87AE8F), width: 1),
+          left: BorderSide(color: Color(0xff87AE8F), width: 1),
           right: BorderSide(color: Colors.transparent),
           top: BorderSide(color: Colors.transparent),
         ),
