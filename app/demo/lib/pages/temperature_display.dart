@@ -18,6 +18,7 @@ class Temperature extends StatelessWidget {
         theme: AppTheme.light,
         darkTheme: AppTheme.dark,
         home: const TemperatureDisplay(),
+        debugShowCheckedModeBanner: false,
       ),
     );
   }

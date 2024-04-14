@@ -24,6 +24,7 @@ class Settings extends StatelessWidget {
         darkTheme: AppTheme.dark,
         themeMode: context.watch<AppTheme>().themeMode,
         home: const SettingsPage(),
+        debugShowCheckedModeBanner: false,
       ),
     );
   }

@@ -75,115 +75,113 @@ class GrowduinoApp extends StatelessWidget {
           body: Stack(
             children: [
               const LoginPage(),
-              Expanded(
-                child: Center(
-                  child: Container(
-                    width: 350,
-                    height: 650,
-                    decoration: BoxDecoration(
-                      color: context.theme.appColors.background.withOpacity(0.5),
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const SizedBox(height: 45),
-                        const Text(
-                          'GrowDuino',
-                          style: TextStyle(
-                            fontSize: 40,
-                            fontWeight: FontWeight.bold,
+              Center(
+                child: Container(
+                  width: 300,
+                  height: 650,
+                  decoration: BoxDecoration(
+                    color: context.theme.appColors.background.withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 45),
+                      const Text(
+                        'GrowDuino',
+                        style: TextStyle(
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 85),
+                      TextField(
+                        controller: _emailController,
+                        decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: context.theme.appColors.secondary, width: 1.0),
+                          ),
+                          labelText: 'Username',
+                          labelStyle: TextStyle(fontSize: 20, color: context.theme.appColors.onSecondary),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(color: context.theme.appColors.secondary),
+                            borderRadius: BorderRadius.circular(45.0),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: context.theme.appColors.secondary, width: 1.0 * 2),
                           ),
                         ),
-                        const SizedBox(height: 85),
-                        TextField(
-                          controller: _emailController,
-                          decoration: InputDecoration(
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: context.theme.appColors.secondary, width: 1.0),
-                            ),
-                            labelText: 'Username',
-                            labelStyle: TextStyle(fontSize: 20, color: context.theme.appColors.onSecondary),
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(color: context.theme.appColors.secondary),
-                              borderRadius: BorderRadius.circular(45.0),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: context.theme.appColors.secondary, width: 1.0 * 2),
-                            ),
+                      ),
+                      const SizedBox(height: 30),
+                      TextField(
+                        controller: _passwordController,
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: context.theme.appColors.secondary, width: 1.0),
+                          ),
+                          labelText: 'Password',
+                          labelStyle: TextStyle(fontSize: 20, color: context.theme.appColors.onSecondary),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(color: context.theme.appColors.secondary),
+                            borderRadius: BorderRadius.circular(45.0),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: context.theme.appColors.secondary, width: 1.0 * 2),
                           ),
                         ),
-                        const SizedBox(height: 30),
-                        TextField(
-                          controller: _passwordController,
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: context.theme.appColors.secondary, width: 1.0),
+                      ),
+                      const SizedBox(height: 30),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: context.theme.appColors.primary,
+                          borderRadius: BorderRadius.circular(10.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.5),
+                              spreadRadius: 5,
+                              blurRadius: 10,
+                              offset: const Offset(0, 3),
                             ),
-                            labelText: 'Password',
-                            labelStyle: TextStyle(fontSize: 20, color: context.theme.appColors.onSecondary),
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(color: context.theme.appColors.secondary),
-                              borderRadius: BorderRadius.circular(45.0),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: context.theme.appColors.secondary, width: 1.0 * 2),
-                            ),
-                          ),
+                          ],
                         ),
-                        const SizedBox(height: 30),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: context.theme.appColors.primary,
-                            borderRadius: BorderRadius.circular(10.0),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.5),
-                                spreadRadius: 5,
-                                blurRadius: 10,
-                                offset: const Offset(0, 3),
+                        child: Builder(
+                          builder: (context) {
+                            return TextButton(
+                              style: ButtonStyle(
+                                minimumSize: MaterialStateProperty.all<Size>(
+                                  const Size(100, 50),
+                                ),
+                                foregroundColor: MaterialStateProperty.all<Color>(context.theme.appColors.onPrimary),
+                                overlayColor: MaterialStateProperty.resolveWith<Color?>(
+                                  (Set<MaterialState> states) {
+                                    if (states.contains(MaterialState.hovered)) {
+                                      return context.theme.appColors.onPrimary.withOpacity(0.04);
+                                    }
+                                    if (states.contains(MaterialState.focused) || states.contains(MaterialState.pressed)) {
+                                      return context.theme.appColors.onPrimary.withOpacity(0.12);
+                                    }
+                                    return null;
+                                  },
+                                ),
                               ),
-                            ],
-                          ),
-                          child: Builder(
-                            builder: (context) {
-                              return TextButton(
-                                style: ButtonStyle(
-                                  minimumSize: MaterialStateProperty.all<Size>(
-                                    const Size(100, 50),
-                                  ),
-                                  foregroundColor: MaterialStateProperty.all<Color>(context.theme.appColors.onPrimary),
-                                  overlayColor: MaterialStateProperty.resolveWith<Color?>(
-                                    (Set<MaterialState> states) {
-                                      if (states.contains(MaterialState.hovered)) {
-                                        return context.theme.appColors.onPrimary.withOpacity(0.04);
-                                      }
-                                      if (states.contains(MaterialState.focused) || states.contains(MaterialState.pressed)) {
-                                        return context.theme.appColors.onPrimary.withOpacity(0.12);
-                                      }
-                                      return null;
-                                    },
-                                  ),
+                              onPressed: () async {
+                                final message = await signInWithEmailAndPassword(email: _emailController.text, password: _passwordController.text);
+                                print(message);
+                                // _router.go("/profile");
+                                 Navigator.push(context, MaterialPageRoute(builder: (context) => Profile()));
+                              },
+                              child: const Text(
+                                'Sign In',
+                                style: TextStyle(
+                                  fontSize: 20,
                                 ),
-                                onPressed: () async {
-                                  final message = await signInWithEmailAndPassword(email: _emailController.text, password: _passwordController.text);
-                                  print(message);
-                                  // _router.go("/profile");
-                                   Navigator.push(context, MaterialPageRoute(builder: (context) => Profile()));
-                                },
-                                child: const Text(
-                                  'Sign In',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                  ),
-                                ),
-                              );
-                            }
-                          ),
+                              ),
+                            );
+                          }
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
