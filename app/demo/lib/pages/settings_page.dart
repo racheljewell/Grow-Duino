@@ -289,8 +289,8 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
         body: _isLoading ? const Center(child: CircularProgressIndicator()) : Padding(
           padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+          child: ListView(
+            // crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               _buildSettingsCard("Lighting", _lightSettings.on, _lightSettings.off),
               _buildSettingsCard('Humidity', _humiditySettings.min, _humiditySettings.max),
