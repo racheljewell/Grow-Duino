@@ -1,7 +1,28 @@
+import 'package:demo/pages/profile_page.dart';
+import 'humidity_display.dart';
+import 'temperature_display.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
+import 'package:demo/components/theme/app_theme.dart';
+
+class Settings extends StatelessWidget {
+  const Settings({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => AppTheme(),
+      builder: (context, _) => MaterialApp(
+        theme: AppTheme.light,
+        darkTheme: AppTheme.dark,
+        home: const SettingsPage(),
+      ),
+    );
+  }
+}
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -79,7 +100,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Widget _buildSettingsCard(String title, String min, String max) {
     return Card(
-      color: const Color.fromARGB(255, 217, 217, 217),
+      color: context.theme.appColors.onPrimary,
       elevation: 4,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
@@ -92,9 +113,9 @@ class _SettingsPageState extends State<SettingsPage> {
             Center(
               child: Text(
                 title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 1, 63, 39),
+                  color: context.theme.appColors.primary,
                   fontSize: 28.0,
                 ),
               ),
@@ -107,15 +128,15 @@ class _SettingsPageState extends State<SettingsPage> {
               children: [
                 Text(
                   title == 'Lighting' ? "On: ${min}" : "Minimum: $min",
-                  style: const TextStyle(
-                    color: Color.fromARGB(255, 1, 63, 39),
+                  style:  TextStyle(
+                    color: context.theme.appColors.primary,
                     fontSize: 14.0,
                   ),
                 ),
                 Text(
                   title == 'Lighting' ? "Off: ${max}" : "Maximum: $max",
-                  style: const TextStyle(
-                    color: Color.fromARGB(255, 1, 63, 39),
+                  style: TextStyle(
+                    color: context.theme.appColors.primary,
                     fontSize: 14.0,
                   ),
                 ),
@@ -151,7 +172,7 @@ class _SettingsPageState extends State<SettingsPage> {
       min: title != 'Lighting' ? 0.0 : 0.0, // Minimum value for temperature slider
       max: title != 'Lighting' ? 100.0 : 1440.0, // Maximum value for time slider (24 hours in minutes)
       divisions: divisions,
-      activeColor: const Color.fromARGB(255, 1, 63, 39),
+      activeColor: context.theme.appColors.primary,
       labels: RangeLabels(
         title == 'Temperature' ? min : (title == 'Humidity' ? min : minutesToTime(minValue.toInt())),
         title == 'Temperature' ? max : (title == 'Humidity' ? max : minutesToTime(maxValue.toInt())),
@@ -194,35 +215,75 @@ class _SettingsPageState extends State<SettingsPage> {
       theme: ThemeData(scaffoldBackgroundColor: const Color.fromARGB(255, 180, 228, 196)),
       home: Scaffold(
         appBar: AppBar(
-          title: const Text("Settings", style: TextStyle(color: Color.fromARGB(255, 255, 251, 251))),
-          backgroundColor: const Color.fromARGB(255, 1, 63, 39),
-          leading: BackButton(
-            color: const Color.fromARGB(255, 255, 251, 251),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
+          title: Text("Settings", style: TextStyle(color: context.theme.appColors.onPrimary)),
+          backgroundColor: context.theme.appColors.primary,
         ),
         drawer: Drawer(
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
-              const DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Colors.blue,
+              DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: context.theme.appColors.primary,
+                    boxShadow: [
+                      BoxShadow(
+                        color: context.theme.appColors.onSurface.withOpacity(0.5),
+                        spreadRadius: 1.5,
+                        blurRadius: 10,
+                        offset: const Offset(0, 3),
+                        blurStyle: BlurStyle.inner
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      Text('GrowDuino',
+                      style: TextStyle(
+                        color: context.theme.appColors.onPrimary,
+                        fontSize: 32.0,
+                      ),
+                      ),
+                      Image.asset('lib/assets/logo/plantLogo.png'),
+                    ],
+                  ),
                 ),
-                child: Text('Drawer Header'),
-              ),
               ListTile(
-                title: const Text("Home"),
-                onTap: () {
-                  // Navigate to profile page
-                },
-              ),
+                  title: Text(
+                    "Home",
+                    style: TextStyle(
+                      color: context.theme.appColors.onSecondary,
+                    ),
+                    ),
+                  onTap: () {
+                    
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => const Profile()));
+
+                  },
+                ),
               ListTile(
-                title: const Text('Item 2'),
-                onTap: () {
-                  // Handle item 2 tap
-                },
-              ),
+                  title: Text(
+                    "Temperature Stats",
+                    style: TextStyle(
+                      color: context.theme.appColors.onSecondary,
+                    ),
+                    ),
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const TemperatureDisplay()));
+                  },
+                ),
+                ListTile(
+                  title: Text(
+                    "Humidity Stats",
+                    style: TextStyle(
+                      color: context.theme.appColors.onSecondary,
+                    ),
+                    ),
+                  onTap: () {
+                    
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => const HumidityDisplay()));
+
+                  },
+                ),
             ],
           ),
         ),
@@ -244,7 +305,7 @@ class _SettingsPageState extends State<SettingsPage> {
               final success = await pushSettings(settingsData);
               if (success) {
                 print("Success");
-                _showConfirmationMessage(); // Show confirmation message
+                // _showConfirmationMessage(); // Show confirmation message
               }
             } catch (e) {
               print('Error: $e');
@@ -286,16 +347,16 @@ class _SettingsPageState extends State<SettingsPage> {
     });
   }
 
-  void _showConfirmationMessage() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Settings saved successfully', style: TextStyle(color: Colors.black),),
-        duration: Duration(seconds: 2), // Set the duration for the snackbar
-        behavior: SnackBarBehavior.floating, // Set behavior to floating
-        padding: EdgeInsets.only(bottom: 16, right: 16), // Adjust padding to position it at the bottom right
-      ),
-    );
-  }
+  // void _showConfirmationMessage() {
+  //   ScaffoldMessenger.of(context).showSnackBar(
+  //     const SnackBar(
+  //       content: Text('Settings saved successfully', style: TextStyle(color: Colors.black),),
+  //       duration: Duration(seconds: 2), // Set the duration for the snackbar
+  //       behavior: SnackBarBehavior.floating, // Set behavior to floating
+  //       padding: EdgeInsets.only(bottom: 16, right: 16), // Adjust padding to position it at the bottom right
+  //     ),
+  //   );
+  // }
 }
 
 Future<bool> pushSettings(Map<String, dynamic> settingsData) async {
