@@ -8,6 +8,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:demo/components/theme/app_theme.dart';
 
+void main() {
+  runApp(Settings());
+}
+
 class Settings extends StatelessWidget {
   const Settings({Key? key}) : super(key: key);
 
@@ -48,7 +52,6 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   void updateThemeMode(ThemeMode themeMode) {
-    // 5. Update ThemeMode.
     context.read<AppTheme>().themeMode = themeMode;
   }
 
@@ -74,16 +77,16 @@ class _SettingsPageState extends State<SettingsPage> {
       Map<String, dynamic> settingsData = jsonDecode(jsonData);
       setState(() {
         _humiditySettings = HumiditySettings(
-            settingsData['minHumidity'] ?? '',
-            settingsData['maxHumidity'] ?? ''
+          settingsData['minHumidity'] ?? '',
+          settingsData['maxHumidity'] ?? ''
         );
         _temperatureSettings = TemperatureSettings(
-            settingsData['minTemperature'] ?? '',
-            settingsData['maxTemperature'] ?? ''
+          settingsData['minTemperature'] ?? '',
+          settingsData['maxTemperature'] ?? ''
         );
         _lightSettings = LightSettings(
-            settingsData['lightsOn'] ?? '',
-            settingsData['lightsOff'] ?? '',
+          settingsData['lightsOn'] ?? '',
+          settingsData['lightsOff'] ?? '',
         );
       });
     }
@@ -127,14 +130,14 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
             const SizedBox(height: 10),
-            _buildSlider(title, min, max), // Pass title to identify slider
+            _buildSlider(title, min, max),
             const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   title == 'Lighting' ? "On: ${min}" : "Minimum: $min",
-                  style:  TextStyle(
+                  style: TextStyle(
                     color: context.theme.appColors.primary,
                     fontSize: 14.0,
                   ),
@@ -175,8 +178,8 @@ class _SettingsPageState extends State<SettingsPage> {
 
     return RangeSlider(
       values: RangeValues(minValue, maxValue),
-      min: title != 'Lighting' ? 0.0 : 0.0, // Minimum value for temperature slider
-      max: title != 'Lighting' ? 100.0 : 1440.0, // Maximum value for time slider (24 hours in minutes)
+      min: title != 'Lighting' ? 0.0 : 0.0,
+      max: title != 'Lighting' ? 100.0 : 1440.0,
       divisions: divisions,
       activeColor: context.theme.appColors.primary,
       labels: RangeLabels(
@@ -200,7 +203,6 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  // Convert "hh:mm:ss" string to minutes
   int timeToMinutes(String time) {
     List<String> parts = time.split(':');
     int hours = int.parse(parts[0]);
@@ -208,7 +210,6 @@ class _SettingsPageState extends State<SettingsPage> {
     return hours * 60 + minutes;
   }
 
-  // Convert minutes to "hh:mm" string
   String minutesToTime(int minutes) {
     int hours = (minutes ~/ 60) % 24;
     int remainingMinutes = minutes % 60;
@@ -217,120 +218,123 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(scaffoldBackgroundColor: const Color.fromARGB(255, 180, 228, 196)),
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text("Settings", style: TextStyle(color: context.theme.appColors.onPrimary)),
-          backgroundColor: context.theme.appColors.primary,
-        ),
-        drawer: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: [
-              DrawerHeader(
-                  decoration: BoxDecoration(
-                    color: context.theme.appColors.primary,
-                    boxShadow: [
-                      BoxShadow(
-                        color: context.theme.appColors.onSurface.withOpacity(0.5),
-                        spreadRadius: 1.5,
-                        blurRadius: 10,
-                        offset: const Offset(0, 3),
-                        blurStyle: BlurStyle.inner
-                      ),
-                    ],
+    return Scaffold(
+      backgroundColor: context.theme.appColors.background,
+      appBar: AppBar(
+        title: Text("Settings", style: TextStyle(color: context.theme.appColors.onPrimary)),
+        backgroundColor: context.theme.appColors.primary,
+        foregroundColor: context.theme.appColors.onPrimary,
+      ),
+      drawer: Drawer(
+        backgroundColor: context.theme.appColors.background,
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: context.theme.appColors.primary,
+                boxShadow: [
+                  BoxShadow(
+                    color: context.theme.appColors.onSurface.withOpacity(0.5),
+                    spreadRadius: 1.5,
+                    blurRadius: 10,
+                    offset: const Offset(0, 3),
+                    blurStyle: BlurStyle.inner,
                   ),
-                  child: Column(
-                    children: [
-                      Text('GrowDuino',
-                      style: TextStyle(
-                        color: context.theme.appColors.onPrimary,
-                        fontSize: 32.0,
-                      ),
-                      ),
-                      Image.asset('lib/assets/logo/plantLogo.png'),
-                    ],
+                ],
+              ),
+              child: Column(
+                children: [
+                  Text(
+                    'GrowDuino',
+                    style: TextStyle(
+                      color: context.theme.appColors.onPrimary,
+                      fontSize: 32.0,
+                    ),
                   ),
+                  Image.asset('lib/assets/logo/plantLogo.png'),
+                ],
+              ),
+            ),
+            ListTile(
+              title: Text(
+                "Home",
+                style: TextStyle(
+                  color: context.theme.appColors.onSecondary,
                 ),
-              ListTile(
-                  title: Text(
-                    "Home",
-                    style: TextStyle(
-                      color: context.theme.appColors.onSecondary,
-                    ),
-                    ),
-                  onTap: () {
-                    
-                    Navigator.push(context, MaterialPageRoute(builder: (_) => const Profile()));
-
-                  },
+              ),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const Profile()));
+              },
+            ),
+            ListTile(
+              title: Text(
+                "Temperature Stats",
+                style: TextStyle(
+                  color: context.theme.appColors.onSecondary,
                 ),
-              ListTile(
-                  title: Text(
-                    "Temperature Stats",
-                    style: TextStyle(
-                      color: context.theme.appColors.onSecondary,
-                    ),
-                    ),
-                  onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const TemperatureDisplay()));
-                  },
+              ),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const TemperatureDisplay()));
+              },
+            ),
+            ListTile(
+              title: Text(
+                "Humidity Stats",
+                style: TextStyle(
+                  color: context.theme.appColors.onSecondary,
                 ),
-                ListTile(
-                  title: Text(
-                    "Humidity Stats",
-                    style: TextStyle(
-                      color: context.theme.appColors.onSecondary,
-                    ),
-                    ),
-                  onTap: () {
-                    
-                    Navigator.push(context, MaterialPageRoute(builder: (_) => const HumidityDisplay()));
-
-                  },
-                ),
-            ],
-          ),
+              ),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const HumidityDisplay()));
+              },
+            ),
+          ],
         ),
-        body: _isLoading ? const Center(child: CircularProgressIndicator()) : Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: ListView(
-            // crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _buildSettingsCard("Lighting", _lightSettings.on, _lightSettings.off),
-              _buildSettingsCard('Humidity', _humiditySettings.min, _humiditySettings.max),
-              _buildSettingsCard('Temperature', _temperatureSettings.min, _temperatureSettings.max),
-              // TextButton(
-              //     onPressed: () => updateThemeMode(ThemeMode.dark),
-              //     child: const Text('Dark'),
-              //   ),
-            ],
-          ),
+      ),
+      body: _isLoading ? const Center(child: CircularProgressIndicator()) : Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: ListView(
+          children: [
+            _buildSettingsCard("Lighting", _lightSettings.on, _lightSettings.off),
+            _buildSettingsCard('Humidity', _humiditySettings.min, _humiditySettings.max),
+            _buildSettingsCard('Temperature', _temperatureSettings.min, _temperatureSettings.max),
+          ],
         ),
-        
-        floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            try {
-              Map<String, dynamic> settingsData = convertSettingsToJson(_lightSettings, _humiditySettings, _temperatureSettings);
-              final success = await pushSettings(settingsData);
-              if (success) {
-                print("Success");
-                // _showConfirmationMessage(); // Show confirmation message
-              }
-            } catch (e) {
-              print('Error: $e');
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          try {
+            Map<String, dynamic> settingsData = convertSettingsToJson(_lightSettings, _humiditySettings, _temperatureSettings);
+            final success = await pushSettings(settingsData);
+            if (success) {
+              print("Success");
+              ScaffoldMessenger.of(context).showSnackBar(successSnackBar);
             }
-          },
-          backgroundColor: context.theme.appColors.primary,
-          child: Icon(
-            Icons.save,
-            color: context.theme.appColors.onPrimary,
-          ),
+            else {
+              ScaffoldMessenger.of(context).showSnackBar(failureSnackBar);
+            }
+          } catch (e) {
+            print('Error: $e');
+          }
+        },
+        backgroundColor: context.theme.appColors.primary,
+        child: Icon(
+          Icons.save,
+          color: context.theme.appColors.onPrimary,
         ),
       ),
     );
   }
+
+  final successSnackBar = const SnackBar(
+    content: Text("Save Successful!"),
+  );
+
+  final failureSnackBar = const SnackBar(
+    content: Text("Error Saving Settings", style: TextStyle(color: Colors.black),),
+    backgroundColor: Colors.red,
+  );
 
   void _saveData(Map<String, dynamic> responseData) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -339,12 +343,12 @@ class _SettingsPageState extends State<SettingsPage> {
     await prefs.setString('settingsData', jsonData);
     setState(() {
       _humiditySettings = HumiditySettings(
-          settingsData['minHumidity'].toString(),
-          settingsData['maxHumidity'].toString()
+        settingsData['minHumidity'].toString(),
+        settingsData['maxHumidity'].toString(),
       );
       _temperatureSettings = TemperatureSettings(
-          settingsData['minTemperature'].toString(),
-          settingsData['maxTemperature'].toString()
+        settingsData['minTemperature'].toString(),
+        settingsData['maxTemperature'].toString(),
       );
       List<String> onT = settingsData['lightsOn'].split(':');
       List<String> offT = settingsData['lightsOff'].split(':');
@@ -357,17 +361,6 @@ class _SettingsPageState extends State<SettingsPage> {
       );
     });
   }
-
-  // void _showConfirmationMessage() {
-  //   ScaffoldMessenger.of(context).showSnackBar(
-  //     const SnackBar(
-  //       content: Text('Settings saved successfully', style: TextStyle(color: Colors.black),),
-  //       duration: Duration(seconds: 2), // Set the duration for the snackbar
-  //       behavior: SnackBarBehavior.floating, // Set behavior to floating
-  //       padding: EdgeInsets.only(bottom: 16, right: 16), // Adjust padding to position it at the bottom right
-  //     ),
-  //   );
-  // }
 }
 
 Future<bool> pushSettings(Map<String, dynamic> settingsData) async {
@@ -419,41 +412,3 @@ Map<String, dynamic> convertSettingsToJson(LightSettings lightSettings, Humidity
     'maxTemperature': int.parse(temperatureSettings.max),
   };
 }
-
-class ToggleSwitch extends StatefulWidget {
-
-  @override
-
-  _ToggleSwitchState createState() => _ToggleSwitchState();
-
-}
-
-class _ToggleSwitchState extends State<ToggleSwitch> {
-  bool isSwitched = false;
-
-  void _toggleSwitch(bool value) {
-    setState(() {
-      isSwitched = value;
-      if (isSwitched) {
-        // updateThemeMode(ThemeMode.dark);
-        print("DARK");
-      } else {
-        Provider.of<AppTheme>(context, listen: false).themeMode = ThemeMode.light;
-        print("LIGHT");
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Switch(
-      value: isSwitched,
-      onChanged: _toggleSwitch,
-      activeTrackColor: context.theme.appColors.primary,
-      activeColor: Colors.black,
-      inactiveThumbImage: const AssetImage('lib/assets/logo/lightbulb.png'),
-      activeThumbImage: const AssetImage('lib/assets/logo/moon.png'),
-    );
-  }
-}
-
