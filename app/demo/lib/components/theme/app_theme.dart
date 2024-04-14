@@ -75,16 +75,16 @@ class AppTheme with ChangeNotifier {
   }();
 
   static final _darkAppColors = AppColorsExtension(
-    primary: const Color(0xff6D9A89),
-    onPrimary: const Color(0xffF0F0F0),
-    secondary: const Color(0xff5B7E6B),
-    onSecondary: const Color(0xffF0F0F0),
-    error: const Color(0xffCF6679),
-    onError: Colors.black,
-    background: const Color(0xff333333),
-    onBackground: const Color(0xffF0F0F0),
-    surface: const Color(0xff666666),
-    onSurface: const Color(0xffF0F0F0),
+    primary: const Color(0xffD9D9D9),
+    onPrimary: const Color(0xff013F27),
+    secondary: const Color(0xff333333),
+    onSecondary: const Color(0xff87AE8F),
+    error: const Color(0xffb00020),
+    onError: Colors.white,
+    background: const Color(0xffB4E4C4),
+    onBackground: const Color(0xff013F27),
+    surface: Colors.black,
+    onSurface: Colors.white,
 );
 
 

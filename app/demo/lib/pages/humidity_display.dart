@@ -180,7 +180,7 @@ class _HumidityDisplayState extends State<HumidityDisplay> {
         backgroundColor: const Color.fromARGB(255, 180, 228, 196),
         body: dataList.isEmpty
             ? const Center(child: CircularProgressIndicator())
-            : Column(
+            : ListView(
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(top: 20.0, left: 10.0, right: 10.0),
