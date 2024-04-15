@@ -11,7 +11,7 @@ def establishConnection():
 
     try:
         # Load credentials from the service account JSON file
-        google_creds, _ = google.auth.load_credentials_from_file('src\data\grow-duino-firebase-adminsdk-dafan-62e114a98c.json')
+        google_creds, _ = google.auth.load_credentials_from_file('src/data/grow-duino-firebase-adminsdk-dafan-62e114a98c.json')
 
         # Initialize Firestore client with the loaded credentials
         db = firestore.Client(project=projectID, credentials=google_creds)
@@ -20,3 +20,6 @@ def establishConnection():
     except Exception as e:
         print(f"Failed to establish connection to Firestore: {e}")
         return None
+
+
+establishConnection()

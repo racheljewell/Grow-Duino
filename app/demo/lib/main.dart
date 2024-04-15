@@ -1,10 +1,7 @@
-import 'package:demo/pages/humidity_display.dart';
 import 'package:demo/pages/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-import 'package:demo/pages/settings_page.dart';
-
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,7 +10,5 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-
   runApp(GrowduinoApp());
-
 }
