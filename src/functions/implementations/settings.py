@@ -20,7 +20,7 @@ def evalData(event: firestore_fn.Event[firestore_fn.DocumentSnapshot | None]) ->
     newData = event.data.to_dict()['packet']
     print(newData)
     db = firestore.client()
-    apiURL = 'https://home.johnstephani.com'
+    apiURL = os.getenv('ASSISTANT_URL')
     homeAssistantToken = os.getenv('ASSISTANT_TOKEN')
     if not homeAssistantToken:
         return
@@ -114,7 +114,7 @@ def checkSettingsUpdate(event: firestore_fn.Event[firestore_fn.DocumentSnapshot]
     curSettings.PrettyPrint()
 
     db = firestore.client()
-    apiURL = 'https://home.johnstephani.com'
+    apiURL = os.getenv('ASSISTANT_URL')
     homeAssistantToken = os.getenv('ASSISTANT_TOKEN')
     if not homeAssistantToken:
         return
