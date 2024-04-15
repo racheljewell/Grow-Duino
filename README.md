@@ -1,8 +1,8 @@
-# GrowDuino App
+# GrowDuino
 
 ## Overview
 
-GrowDuino App is a mobile application designed to monitor and display real-time data from a GrowDuino device. It provides insights into temperature, humidity, and light levels for optimized plant growth.
+GrowDuino is a mobile application designed to monitor and display real-time data from a GrowDuino device. It provides insights into temperature, humidity, and light levels for optimized plant growth.
 
 ## Features
 
