@@ -1,50 +1,59 @@
-# Grow-Duino
+# GrowDuino App
 
-## Initializing Go Packages
+## Overview
 
-```bash
-cd cmd
-mkdir newPackageName
-cd newPackageName
-```
+GrowDuino App is a mobile application designed to monitor and display real-time data from a GrowDuino device. It provides insights into temperature, humidity, and light levels for optimized plant growth.
 
-Make go file 'imapackage.go'
-```Go
-package newPackageName
+## Features
 
-// Capitalized items can be exported
-func ExportableFunction() {
-  // Something goes here
-{
+- Real-time monitoring of temperature, humidity, and light levels.
+- Statistical analysis of temperature and humidity data.
+- Dark mode support for better usability in low-light conditions.
+- Easy navigation through a user-friendly interface.
 
-// Uncapitalized items cannot be exported
-func iStayHere() {
-  // private stuff
-}
-```
+## Installation
 
-Make sure you're in 'newPackageName' directory. Then,
+Requirements: firebase-tools & flutter must be installed
 
-```bash
-go build
-```
+1. Clone the repository:
 
-To import local package:
-```Go
-import (
-  // Pseudo can be a shortened version of the name that you can access from the code
-  newPackageNamePseudo "growduino/main/newPackageName"
-)
-```
+    ```bash
+    git clone https://github.com/racheljewell/Grow-Duino.git
+    ```
 
-## Running Go Code
-In cmd directory:
-```bash
-// Updates go.mod to include any new packages used or remove
-//    any packages removed.
-go mod tidy
-// Complies the code into an executable
-go build
-// Runs the code
-.\main.exe
-```
+2. Navigate to the project directory:
+
+    ```bash
+    cd Grow-Duino
+    ```
+
+3. Install dependencies:
+
+    ```bash
+    flutter pub get
+    ```
+
+4. Run the app:
+
+    ```bash
+    flutter run
+    ```
+
+## Technologies Used
+
+- Flutter: Framework for building cross-platform applications.
+- Dart: Programming language used with Flutter.
+- HTTP package: For making HTTP requests to fetch data from the server.
+- Provider package: For state management.
+- FL Chart package: For visualizing data with charts.
+- Firebase: For deployment, authentication, database storage and cloud functions.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgements
+
+- [Flutter](https://flutter.dev/): For providing a powerful framework for building beautiful apps.
+- [FL Chart package](https://pub.dev/packages/fl_chart): For providing charting capabilities.
+- [Firebase](https://firebase.google.com): For deployment, authentication, database storage and cloud functions.
