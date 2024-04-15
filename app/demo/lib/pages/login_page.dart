@@ -10,26 +10,19 @@ class GrowduinoApp extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-
-
-  Future<String?> signInWithEmailAndPassword({
-    required String email, 
-    required String password
-  }) async {
-    print(email);
-    print(password);
-
+  Future<bool?> signInWithEmailAndPassword(
+      {required String email, required String password}) async {
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
       // Navigate to the home page or perform any other actions upon successful sign-in
-      return 'Success';
+      return true;
     } catch (e) {
       // Handle sign-in errors
       print('Sign-in error: $e');
-      return 'Error';
+      return false;
       // Show error message to the user
       // You can use Flutter's SnackBar or showDialog for this purpose
     }
@@ -99,16 +92,23 @@ class GrowduinoApp extends StatelessWidget {
                         controller: _emailController,
                         decoration: InputDecoration(
                           enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: context.theme.appColors.secondary, width: 1.0),
+                            borderSide: BorderSide(
+                                color: context.theme.appColors.secondary,
+                                width: 1.0),
                           ),
                           labelText: 'Username',
-                          labelStyle: TextStyle(fontSize: 20, color: context.theme.appColors.onSecondary),
+                          labelStyle: TextStyle(
+                              fontSize: 20,
+                              color: context.theme.appColors.onSecondary),
                           border: OutlineInputBorder(
-                            borderSide: BorderSide(color: context.theme.appColors.secondary),
+                            borderSide: BorderSide(
+                                color: context.theme.appColors.secondary),
                             borderRadius: BorderRadius.circular(45.0),
                           ),
                           focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: context.theme.appColors.secondary, width: 1.0 * 2),
+                            borderSide: BorderSide(
+                                color: context.theme.appColors.secondary,
+                                width: 1.0 * 2),
                           ),
                         ),
                       ),
@@ -118,16 +118,23 @@ class GrowduinoApp extends StatelessWidget {
                         obscureText: true,
                         decoration: InputDecoration(
                           enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: context.theme.appColors.secondary, width: 1.0),
+                            borderSide: BorderSide(
+                                color: context.theme.appColors.secondary,
+                                width: 1.0),
                           ),
                           labelText: 'Password',
-                          labelStyle: TextStyle(fontSize: 20, color: context.theme.appColors.onSecondary),
+                          labelStyle: TextStyle(
+                              fontSize: 20,
+                              color: context.theme.appColors.onSecondary),
                           border: OutlineInputBorder(
-                            borderSide: BorderSide(color: context.theme.appColors.secondary),
+                            borderSide: BorderSide(
+                                color: context.theme.appColors.secondary),
                             borderRadius: BorderRadius.circular(45.0),
                           ),
                           focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: context.theme.appColors.secondary, width: 1.0 * 2),
+                            borderSide: BorderSide(
+                                color: context.theme.appColors.secondary,
+                                width: 1.0 * 2),
                           ),
                         ),
                       ),
@@ -145,41 +152,64 @@ class GrowduinoApp extends StatelessWidget {
                             ),
                           ],
                         ),
-                        child: Builder(
-                          builder: (context) {
-                            return TextButton(
-                              style: ButtonStyle(
-                                minimumSize: MaterialStateProperty.all<Size>(
-                                  const Size(100, 50),
-                                ),
-                                foregroundColor: MaterialStateProperty.all<Color>(context.theme.appColors.onPrimary),
-                                overlayColor: MaterialStateProperty.resolveWith<Color?>(
-                                  (Set<MaterialState> states) {
-                                    if (states.contains(MaterialState.hovered)) {
-                                      return context.theme.appColors.onPrimary.withOpacity(0.04);
-                                    }
-                                    if (states.contains(MaterialState.focused) || states.contains(MaterialState.pressed)) {
-                                      return context.theme.appColors.onPrimary.withOpacity(0.12);
-                                    }
-                                    return null;
-                                  },
-                                ),
+                        child: Builder(builder: (context) {
+                          return TextButton(
+                            style: ButtonStyle(
+                              minimumSize: MaterialStateProperty.all<Size>(
+                                const Size(100, 50),
                               ),
-                              onPressed: () async {
-                                final message = await signInWithEmailAndPassword(email: _emailController.text, password: _passwordController.text);
-                                print(message);
-                                // _router.go("/profile");
-                                 Navigator.push(context, MaterialPageRoute(builder: (context) => Profile()));
-                              },
-                              child: const Text(
-                                'Sign In',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                ),
+                              foregroundColor: MaterialStateProperty.all<Color>(
+                                  context.theme.appColors.onPrimary),
+                              overlayColor:
+                                  MaterialStateProperty.resolveWith<Color?>(
+                                (Set<MaterialState> states) {
+                                  if (states.contains(MaterialState.hovered)) {
+                                    return context.theme.appColors.onPrimary
+                                        .withOpacity(0.04);
+                                  }
+                                  if (states.contains(MaterialState.focused) ||
+                                      states.contains(MaterialState.pressed)) {
+                                    return context.theme.appColors.onPrimary
+                                        .withOpacity(0.12);
+                                  }
+                                  return null;
+                                },
                               ),
-                            );
-                          }
-                        ),
+                            ),
+                            onPressed: () async {
+                              try {
+                                final message =
+                                    await signInWithEmailAndPassword(
+                                        email: _emailController.text,
+                                        password: _passwordController.text);
+                                if (message != null) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const Profile()),
+                                  );
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                          'Login failed. Please check your email and password.'),
+                                      duration: Duration(seconds: 3),
+                                    ),
+                                  );
+                                }
+                              } catch (e) {
+                                // Handle any errors that occur during sign-in
+                                print("Error signing in: $e");
+                              }
+                            },
+                            child: const Text(
+                              'Sign In',
+                              style: TextStyle(
+                                fontSize: 20,
+                              ),
+                            ),
+                          );
+                        }),
                       ),
                     ],
                   ),
@@ -205,7 +235,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('lib/assets/img/home_background.png'),
             fit: BoxFit.cover,

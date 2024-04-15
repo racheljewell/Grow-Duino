@@ -44,7 +44,8 @@ class _TemperatureDisplayState extends State<TemperatureDisplay> {
     fetchDataFromFirestore();
 
     // Fetch data every 30 seconds
-    timer = Timer.periodic(const Duration(seconds: 30), (Timer t) => fetchDataFromFirestore());
+    timer = Timer.periodic(
+        const Duration(seconds: 30), (Timer t) => fetchDataFromFirestore());
   }
 
   @override
@@ -59,13 +60,10 @@ class _TemperatureDisplayState extends State<TemperatureDisplay> {
 
     try {
       final response = await http.post(url);
-      print(response.body);
       if (response.statusCode == 200) {
-        
         final jsonData = jsonDecode(response.body);
         setState(() {
           dataList = jsonData['list'].cast<Map<String, dynamic>>();
-          print(dataList);
           calculateStatistics(); // Calculate statistics when data is fetched
         });
       } else {
@@ -83,34 +81,32 @@ class _TemperatureDisplayState extends State<TemperatureDisplay> {
 
   Widget _buildNumberDisplayBox(String number) {
     return Container(
-      child: Container(
-        decoration: BoxDecoration( 
-          color: context.theme.appColors.secondary,
-          borderRadius: BorderRadius.circular(20.0),
-          boxShadow: [
-            BoxShadow(
+        child: Container(
+      decoration: BoxDecoration(
+        color: context.theme.appColors.secondary,
+        borderRadius: BorderRadius.circular(20.0),
+        boxShadow: [
+          BoxShadow(
               color: Colors.black.withOpacity(0.5),
               spreadRadius: 1.5,
               blurRadius: 10,
               offset: const Offset(0, 3),
-              blurStyle: BlurStyle.inner
-            ),
-          ],
+              blurStyle: BlurStyle.inner),
+        ],
+      ),
+      width: 80, // Width of each rectangle
+      height: 40, // Height of each rectangle
+      margin: const EdgeInsets.all(5.0),
+      child: Center(
+        child: Text(
+          number,
+          style: TextStyle(
+            color: context.theme.appColors.onSecondary,
+            fontSize: 20,
+          ),
         ),
-          width: 80, // Width of each rectangle
-          height: 40, // Height of each rectangle
-          margin: const EdgeInsets.all(5.0),
-        child: Center(
-          child: Text(
-              number,
-              style:  TextStyle(
-                color: context.theme.appColors.onSecondary,
-                fontSize: 20,
-              ),
-            ),
-        ), 
-        )
-    );
+      ),
+    ));
   }
 
   Widget _buildHotdogBox(String title, String number) {
@@ -121,7 +117,8 @@ class _TemperatureDisplayState extends State<TemperatureDisplay> {
         margin: const EdgeInsets.all(5.0), // Margin between rectangles
         decoration: BoxDecoration(
           color: context.theme.appColors.onPrimary, // Color of the rectangles
-          borderRadius: BorderRadius.circular(20), // Border radius to make rectangles "hotdog" shaped
+          borderRadius: BorderRadius.circular(
+              20), // Border radius to make rectangles "hotdog" shaped
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.5),
@@ -158,7 +155,6 @@ class _TemperatureDisplayState extends State<TemperatureDisplay> {
     );
   }
 
-
   Widget _buildSquareBox() {
     return Center(
       child: Container(
@@ -181,18 +177,19 @@ class _TemperatureDisplayState extends State<TemperatureDisplay> {
     );
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(scaffoldBackgroundColor: context.theme.appColors.background),
+      theme: ThemeData(
+          scaffoldBackgroundColor: context.theme.appColors.background),
       home: Scaffold(
         appBar: AppBar(
-          title: Text("Temperature", style: TextStyle(color: context.theme.appColors.onPrimary)),
+          title: Text("Temperature",
+              style: TextStyle(color: context.theme.appColors.onPrimary)),
           backgroundColor: context.theme.appColors.primary,
-          leading: BackButton(color: context.theme.appColors.onPrimary,
-          onPressed: () => Navigator.of(context).pop()),
+          leading: BackButton(
+              color: context.theme.appColors.onPrimary,
+              onPressed: () => Navigator.of(context).pop()),
         ),
         backgroundColor: context.theme.appColors.background,
         body: dataList.isEmpty
@@ -200,13 +197,19 @@ class _TemperatureDisplayState extends State<TemperatureDisplay> {
             : ListView(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(top: 20.0, left: 10.0, right: 10.0),
-                    child: LineChart1(temperatureValues: dataList.map<double>((data) => data['data']['temperature'].toDouble()).toList(), dataList: dataList),
+                    padding: const EdgeInsets.only(
+                        top: 20.0, left: 10.0, right: 10.0),
+                    child: LineChart1(
+                        temperatureValues: dataList
+                            .map<double>((data) =>
+                                data['data']['temperature'].toDouble())
+                            .toList(),
+                        dataList: dataList),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(0.5),
                     child: Center(
-                      child:_buildSquareBox(),
+                      child: _buildSquareBox(),
                     ),
                   ),
                 ],
@@ -236,7 +239,10 @@ class LineChart1 extends StatelessWidget {
                     border: Border.all(color: Colors.grey), // Border color
                     borderRadius: BorderRadius.circular(10), // Border radius
                   ),
-                  child: _LineChart(isShowingMainData: true, temperatureValues: temperatureValues, dataList: dataList),
+                  child: _LineChart(
+                      isShowingMainData: true,
+                      temperatureValues: temperatureValues,
+                      dataList: dataList),
                 ),
               ),
             ],
@@ -248,7 +254,10 @@ class LineChart1 extends StatelessWidget {
 }
 
 class _LineChart extends StatelessWidget {
-  const _LineChart({required this.isShowingMainData, required this.temperatureValues, required this.dataList});
+  const _LineChart(
+      {required this.isShowingMainData,
+      required this.temperatureValues,
+      required this.dataList});
 
   final bool isShowingMainData;
   final List<double> temperatureValues;
@@ -261,12 +270,13 @@ class _LineChart extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(24.0), // Add padding around the chart
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey), // Border color
-          borderRadius: BorderRadius.circular(10), // Border radius
-          color: context.theme.appColors.onPrimary
-        ),
+            border: Border.all(color: Colors.grey), // Border color
+            borderRadius: BorderRadius.circular(10), // Border radius
+            color: context.theme.appColors.onPrimary),
         child: LineChart(
-          isShowingMainData ? sampleData1(temperatureValues) : sampleData2(temperatureValues),
+          isShowingMainData
+              ? sampleData1(temperatureValues)
+              : sampleData2(temperatureValues),
           duration: const Duration(milliseconds: 250),
         ),
       ),
@@ -317,9 +327,7 @@ class _LineChart extends StatelessWidget {
 
   FlTitlesData get titlesData1 => FlTitlesData(
         bottomTitles: AxisTitles(
-          axisNameWidget: const Text(
-            'Time'
-          ),
+          axisNameWidget: const Text('Time'),
           sideTitles: bottomTitles,
         ),
         rightTitles: const AxisTitles(
@@ -329,9 +337,7 @@ class _LineChart extends StatelessWidget {
           sideTitles: SideTitles(showTitles: false),
         ),
         leftTitles: AxisTitles(
-          axisNameWidget: const Text(
-            'Temperature (F)'
-          ),
+          axisNameWidget: const Text('Temperature (F)'),
           sideTitles: leftTitles(),
         ),
       );
@@ -349,16 +355,20 @@ class _LineChart extends StatelessWidget {
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
     if (value == 0) {
       // Display the timestamp of the first data point
-      final firstTimestamp = DateTime.parse(dataList.last['time']); // Assuming 'timestamp' key holds the timestamp value
+      final firstTimestamp = DateTime.parse(dataList
+          .last['time']); // Assuming 'timestamp' key holds the timestamp value
       final hour = firstTimestamp.hour.toString().padLeft(2, '0');
       final minute = firstTimestamp.minute.toString().padLeft(2, '0');
-      return Text('$hour:$minute', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16));
+      return Text('$hour:$minute',
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16));
     } else if (value == temperatureValues.length - 1) {
       // Display the timestamp of the last data point
-      final lastTimestamp = DateTime.parse(dataList.first['time']); // Assuming 'timestamp' key holds the timestamp value
+      final lastTimestamp = DateTime.parse(dataList
+          .first['time']); // Assuming 'timestamp' key holds the timestamp value
       final hour = lastTimestamp.hour.toString().padLeft(2, '0');
       final minute = lastTimestamp.minute.toString().padLeft(2, '0');
-      return Text('$hour:$minute', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16));
+      return Text('$hour:$minute',
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16));
     } else {
       return Container(); // Return empty container for all other values
     }
@@ -404,4 +414,3 @@ class _LineChart extends StatelessWidget {
         reservedSize: 20,
       );
 }
-

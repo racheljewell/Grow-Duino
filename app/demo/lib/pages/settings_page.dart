@@ -309,7 +309,6 @@ class _SettingsPageState extends State<SettingsPage> {
             Map<String, dynamic> settingsData = convertSettingsToJson(_lightSettings, _humiditySettings, _temperatureSettings);
             final success = await pushSettings(settingsData);
             if (success) {
-              print("Success");
               ScaffoldMessenger.of(context).showSnackBar(successSnackBar);
             }
             else {
@@ -374,10 +373,8 @@ Future<bool> pushSettings(Map<String, dynamic> settingsData) async {
   final response = await http.post(url, headers: headers, body: body);
 
   if (response.statusCode == 200) {
-    print("Save Success");
     return true; // Indicate success
   } else {
-    print(response.body);
     return false; // Indicate failure
   }
 }

@@ -47,7 +47,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     lightsValue = 0;
     fetchRecentData();
 
-    timer = Timer.periodic(const Duration(seconds: 30), (Timer t) => fetchRecentData());
+    timer = Timer.periodic(
+        const Duration(seconds: 30), (Timer t) => fetchRecentData());
   }
 
   @override
@@ -61,7 +62,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       final response = await http.post(
         Uri.parse('https://getrecentdata-7frthucguq-uc.a.run.app'),
       );
-      print(response.body);
       if (response.statusCode == 200) {
         final jsonData = jsonDecode(response.body);
         setState(() {
@@ -71,7 +71,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           lightsValue = (recentData['lights'] ?? 0).toDouble();
         });
       } else {
-        
         throw Exception('Failed to fetch data');
       }
     } catch (e) {
@@ -119,7 +118,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               Text(
                 number,
-                style:  TextStyle(
+                style: TextStyle(
                   color: context.theme.appColors.onPrimary,
                   fontSize: 20,
                 ),
@@ -144,7 +143,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         theme: AppTheme.light,
         darkTheme: AppTheme.dark,
         themeMode: context.watch<AppTheme>().themeMode,
-
         home: Scaffold(
           appBar: AppBar(
             title: const Text("Profile"),
@@ -161,21 +159,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     color: context.theme.appColors.primary,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.5),
-                        spreadRadius: 1.5,
-                        blurRadius: 10,
-                        offset: const Offset(0, 3),
-                        blurStyle: BlurStyle.inner
-                      ),
+                          color: Colors.black.withOpacity(0.5),
+                          spreadRadius: 1.5,
+                          blurRadius: 10,
+                          offset: const Offset(0, 3),
+                          blurStyle: BlurStyle.inner),
                     ],
                   ),
                   child: Column(
                     children: [
-                      Text('GrowDuino',
-                      style: TextStyle(
-                        color: context.theme.appColors.onPrimary,
-                        fontSize: 32.0,
-                      ),
+                      Text(
+                        'GrowDuino',
+                        style: TextStyle(
+                          color: context.theme.appColors.onPrimary,
+                          fontSize: 32.0,
+                        ),
                       ),
                       Image.asset('lib/assets/logo/plantLogo.png'),
                     ],
@@ -187,9 +185,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     style: TextStyle(
                       color: context.theme.appColors.onSecondary,
                     ),
-                    ),
+                  ),
                   onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsPage()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SettingsPage()));
                   },
                 ),
                 ListTile(
@@ -198,9 +199,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     style: TextStyle(
                       color: context.theme.appColors.onSecondary,
                     ),
-                    ),
+                  ),
                   onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const TemperatureDisplay()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const TemperatureDisplay()));
                   },
                 ),
                 ListTile(
@@ -209,11 +213,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     style: TextStyle(
                       color: context.theme.appColors.onSecondary,
                     ),
-                    ),
+                  ),
                   onTap: () {
-                    
-                    Navigator.push(context, MaterialPageRoute(builder: (_) => const HumidityDisplay()));
-
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => const HumidityDisplay()));
                   },
                 ),
               ],
@@ -222,9 +227,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           body: Expanded(
             child: Scaffold(
               backgroundColor: context.theme.appColors.background,
-              body: ListView(
-                children: [
-                  Padding(
+              body: ListView(children: [
+                Padding(
                   padding: const EdgeInsets.all(30),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -275,8 +279,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ],
                   ),
                 ),
-                ]
-              ),
+              ]),
             ),
           ),
         ),

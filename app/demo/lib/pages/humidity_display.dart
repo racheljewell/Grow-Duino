@@ -42,13 +42,11 @@ class _HumidityDisplayState extends State<HumidityDisplay> {
 
     try {
       final response = await http.post(url);
-      print(response.body);
       if (response.statusCode == 200) {
         
         final jsonData = jsonDecode(response.body);
         setState(() {
           dataList = jsonData['list'].cast<Map<String, dynamic>>();
-          print(dataList);
           calculateStatistics(); // Calculate statistics when data is fetched
         });
       } else {
