@@ -13,14 +13,7 @@ class Profile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => AppTheme(),
-      builder: (context, _) => MaterialApp(
-        theme: AppTheme.light,
-        darkTheme: AppTheme.dark,
-        home: const ProfileScreen(),
-      ),
-    );
+    return const ProfileScreen();
   }
 }
 
@@ -139,149 +132,142 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => AppTheme(),
-      builder: (context, _) => MaterialApp(
-        theme: AppTheme.light,
-        darkTheme: AppTheme.dark,
-        themeMode: context.watch<AppTheme>().themeMode,
-        home: Scaffold(
-          appBar: AppBar(
-            title: const Text("Profile"),
-            backgroundColor: context.theme.appColors.primary,
-            foregroundColor: context.theme.appColors.onPrimary,
-          ),
-          drawer: Drawer(
-            backgroundColor: context.theme.appColors.background,
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: [
-                DrawerHeader(
-                  decoration: BoxDecoration(
-                    color: context.theme.appColors.primary,
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.black.withOpacity(0.5),
-                          spreadRadius: 1.5,
-                          blurRadius: 10,
-                          offset: const Offset(0, 3),
-                          blurStyle: BlurStyle.inner),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      Text(
-                        'GrowDuino',
-                        style: TextStyle(
-                          color: context.theme.appColors.onPrimary,
-                          fontSize: 32.0,
-                        ),
+      builder: (context, _) => Scaffold(
+        backgroundColor: context.theme.appColors.background,
+        appBar: AppBar(
+          title: const Text("Profile"),
+          backgroundColor: context.theme.appColors.primary,
+          foregroundColor: context.theme.appColors.onPrimary,
+        ),
+        drawer: Drawer(
+          backgroundColor: context.theme.appColors.background,
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              DrawerHeader(
+                decoration: BoxDecoration(
+                  color: context.theme.appColors.primary,
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.black.withOpacity(0.5),
+                        spreadRadius: 1.5,
+                        blurRadius: 10,
+                        offset: const Offset(0, 3),
+                        blurStyle: BlurStyle.inner),
+                  ],
+                ),
+                child: Column(
+                  children: [
+                    Text(
+                      'GrowDuino',
+                      style: TextStyle(
+                        color: context.theme.appColors.onPrimary,
+                        fontSize: 32.0,
                       ),
-                      Image.asset('lib/assets/logo/plantLogo.png'),
-                    ],
+                    ),
+                    Image.asset('lib/assets/logo/plantLogo.png'),
+                  ],
+                ),
+              ),
+              ListTile(
+                title: Text(
+                  "Settings",
+                  style: TextStyle(
+                    color: context.theme.appColors.onSecondary,
                   ),
                 ),
-                ListTile(
-                  title: Text(
-                    "Settings",
-                    style: TextStyle(
-                      color: context.theme.appColors.onSecondary,
-                    ),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SettingsPage()));
+                },
+              ),
+              ListTile(
+                title: Text(
+                  "Temperature Stats",
+                  style: TextStyle(
+                    color: context.theme.appColors.onSecondary,
                   ),
-                  onTap: () {
-                    Navigator.push(
+                ),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const TemperatureDisplay()));
+                },
+              ),
+              ListTile(
+                title: Text(
+                  "Humidity Stats",
+                  style: TextStyle(
+                    color: context.theme.appColors.onSecondary,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => const HumidityDisplay()));
+                },
+              ),
+            ],
+          ),
+        ),
+        body: ListView(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(30),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  _buildNumberDisplayBox(
+                    "lib/assets/logo/thermometer.png",
+                    "Temperature",
+                    temperatureValue.toString(),
+                    () {
+                      Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const SettingsPage()));
-                  },
-                ),
-                ListTile(
-                  title: Text(
-                    "Temperature Stats",
-                    style: TextStyle(
-                      color: context.theme.appColors.onSecondary,
-                    ),
+                          builder: (context) => const TemperatureDisplay(),
+                        ),
+                      );
+                    },
                   ),
-                  onTap: () {
-                    Navigator.push(
+                  const SizedBox(height: 10),
+                  _buildNumberDisplayBox(
+                    "lib/assets/logo/humidity.png",
+                    "Humidity",
+                    humidityValue.toString(),
+                    () {
+                      Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const TemperatureDisplay()));
-                  },
-                ),
-                ListTile(
-                  title: Text(
-                    "Humidity Stats",
-                    style: TextStyle(
-                      color: context.theme.appColors.onSecondary,
+                          builder: (context) => const HumidityDisplay(),
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 70),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      border: Border.all(
+                        color: context.theme.appColors.primary,
+                        width: 2,
+                      ),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: const Image(
+                        image: AssetImage('lib/assets/img/plant.png'),
+                      ),
                     ),
                   ),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => const HumidityDisplay()));
-                  },
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          body: Expanded(
-            child: Scaffold(
-              backgroundColor: context.theme.appColors.background,
-              body: ListView(children: [
-                Padding(
-                  padding: const EdgeInsets.all(30),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      _buildNumberDisplayBox(
-                        "lib/assets/logo/thermometer.png",
-                        "Temperature",
-                        temperatureValue.toString(),
-                        () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const TemperatureDisplay(),
-                            ),
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 10),
-                      _buildNumberDisplayBox(
-                        "lib/assets/logo/humidity.png",
-                        "Humidity",
-                        humidityValue.toString(),
-                        () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const HumidityDisplay(),
-                            ),
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 70),
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          border: Border.all(
-                            color: context.theme.appColors.primary,
-                            width: 2,
-                          ),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(15),
-                          child: const Image(
-                            image: AssetImage('lib/assets/img/plant.png'),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ]),
-            ),
-          ),
+          ],
         ),
       ),
     );

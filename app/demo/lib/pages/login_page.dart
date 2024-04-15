@@ -202,9 +202,10 @@ class GrowduinoApp extends StatelessWidget {
                                 print("Error signing in: $e");
                               }
                             },
-                            child: const Text(
+                            child: Text(
                               'Sign In',
                               style: TextStyle(
+                                color: context.theme.appColors.onPrimary,
                                 fontSize: 20,
                               ),
                             ),

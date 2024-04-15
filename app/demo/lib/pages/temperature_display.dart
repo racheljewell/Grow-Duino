@@ -5,24 +5,21 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:demo/pages/temperature_stats.dart';
-import 'package:provider/provider.dart';
 
 class Temperature extends StatelessWidget {
   const Temperature({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => AppTheme(),
-      builder: (context, _) => MaterialApp(
-        theme: AppTheme.light,
-        darkTheme: AppTheme.dark,
-        home: const TemperatureDisplay(),
-        debugShowCheckedModeBanner: false,
-      ),
+    return MaterialApp(
+      theme: AppTheme.light,
+      darkTheme: AppTheme.dark,
+      home: const TemperatureDisplay(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
+
 
 class TemperatureDisplay extends StatefulWidget {
   const TemperatureDisplay({Key? key}) : super(key: key);
