@@ -52,8 +52,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> fetchRecentData() async {
     try {
+      const getRecentDataUrl = "";  // url for getting recent data goes here
       final response = await http.post(
-        Uri.parse('https://getrecentdata-7frthucguq-uc.a.run.app'),
+        Uri.parse(getRecentDataUrl),
       );
       if (response.statusCode == 200) {
         final jsonData = jsonDecode(response.body);

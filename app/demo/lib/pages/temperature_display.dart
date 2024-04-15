@@ -32,6 +32,7 @@ class _TemperatureDisplayState extends State<TemperatureDisplay> {
   List<Map<String, dynamic>> dataList = [];
   late Timer timer;
   late TemperatureStatistics stats; // Variable to store statistics
+  final getDataUrl = "";  // URL for get data goes here
 
   @override
   void initState() {
@@ -53,7 +54,7 @@ class _TemperatureDisplayState extends State<TemperatureDisplay> {
   }
 
   Future<void> fetchDataFromFirestore() async {
-    final url = Uri.parse('https://getdata-7frthucguq-uc.a.run.app');
+    final url = Uri.parse(getDataUrl);
 
     try {
       final response = await http.post(url);

@@ -38,7 +38,8 @@ class _HumidityDisplayState extends State<HumidityDisplay> {
   }
 
   Future<void> fetchDataFromFirestore() async {
-    final url = Uri.parse('https://getdata-7frthucguq-uc.a.run.app');
+    const getDataUrl = "";
+    final url = Uri.parse(getDataUrl);
 
     try {
       final response = await http.post(url);

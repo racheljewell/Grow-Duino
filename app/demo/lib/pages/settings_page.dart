@@ -42,6 +42,7 @@ class _SettingsPageState extends State<SettingsPage> {
   late HumiditySettings _humiditySettings;
   late TemperatureSettings _temperatureSettings;
   bool _isLoading = true; // Track loading state
+  
 
   @override
   void initState() {
@@ -94,8 +95,9 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<Map<String, dynamic>> pullSettings() async {
+    const getSettingsUrl = "";
     final response = await http.post(
-      Uri.parse('https://getsettings-7frthucguq-uc.a.run.app'),
+      Uri.parse(getSettingsUrl),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -364,7 +366,8 @@ class _SettingsPageState extends State<SettingsPage> {
 }
 
 Future<bool> pushSettings(Map<String, dynamic> settingsData) async {
-  final url = Uri.parse('https://savesettings-7frthucguq-uc.a.run.app');
+  const saveSettingsUrl = ""; // url for saveSettings goes here
+  final url = Uri.parse(saveSettingsUrl);
   final headers = <String, String>{
     'Content-Type': 'application/json; charset=UTF-8',
   };
