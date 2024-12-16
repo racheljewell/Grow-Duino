@@ -11,7 +11,7 @@ GrowDuino is a mobile application designed to provide real-time monitoring and a
 *   **Data Visualization:** Presents temperature and humidity data visually using interactive charts.
 *   **User-Friendly Interface:** Offers a clean and intuitive navigation experience.
 *   **Dark Mode Support:** Includes a dark mode option for comfortable viewing in low-light conditions.
-*   **Offline Data Caching:** Retains recent data even when the connection to the GrowDuino device is temporarily unavailable (if implemented).
+*   **Offline Data Caching:** Retains recent data even when the connection to the GrowDuino device is temporarily unavailable.
 
 ## Installation
 
